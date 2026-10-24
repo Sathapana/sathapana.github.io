@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Penny Stock Crash Hazard</title>
+  <meta name="description" content="A pre-registered survival study: for a volatile US small cap on a given day, what is the probability of a crash within 20 trading days, and does anything beat a volatility forecast? By Sathapana Chawananon.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/project.css">
+  <script>
+    // Apply the saved theme before first paint to avoid a flash.
+    try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav container">
+      <a class="brand mono" href="../../">sath<span class="accent">@</span>paris<span class="dim">:~/projects$</span></a>
+      <ul class="nav-links">
+        <li><a href="#results">Results</a></li>
+        <li><a href="#method">Method</a></li>
+        <li><a href="#overlay">Overlay</a></li>
+        <li><a href="#caveats">Caveats</a></li>
+      </ul>
+      <div class="toggles">
+        <button class="toggle" id="theme-toggle" type="button" aria-label="Toggle colour theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="case-hero container">
+      <a class="back mono" href="../../#projects">&larr; back to portfolio</a>
+      <p class="prompt mono"><span class="accent">$</span> cat projects/penny-stock-survival/README</p>
+      <h1>Crash hazard in US penny stocks</h1>
+      <p class="headline mono">Survival analysis · pre-registered · does anything beat a volatility forecast?</p>
+      <p class="lede">For a volatile US small cap ($0.50–$5) on a given day, what is the probability of a crash within the next 20 trading days? And does anything predict it better than a <strong>volatility forecast plugged into a random walk</strong>? "Nothing beats it" was declared an equally valid answer before any model was fitted.</p>
+      <ul class="facts mono">
+        <li>2016-01 → 2026-10</li>
+        <li>3,307 series · 5.26M daily bars</li>
+        <li>589,609 stock-days in the universe</li>
+        <li>22 frozen features</li>
+        <li>180 tests</li>
+      </ul>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/Sathapana/PennyStock_survival" target="_blank" rel="noopener">Code on GitHub</a>
+        <a class="btn" href="https://github.com/Sathapana/PennyStock_survival/blob/main/FULL_REPORT.md" target="_blank" rel="noopener">Full report</a>
+        <a class="btn" href="https://github.com/Sathapana/PennyStock_survival/blob/main/REPORT.md" target="_blank" rel="noopener">Short report</a>
+      </div>
+    </section>
+
+    <section id="results" class="section container">
+      <h2 class="section-title mono"><span class="accent">01.</span> Answer in brief</h2>
+      <div class="tiles">
+        <article class="card tile">
+          <span class="tile-label mono">E1 · volatility-scaled crash</span>
+          <span class="tile-value">Nothing beats B2</span>
+          <p class="tile-note">No model beats the volatility baseline with a calibrated forecast, on validation or on the holdout. The null hypothesis stands.</p>
+        </article>
+        <article class="card tile">
+          <span class="tile-label mono">E2 · 30% crash</span>
+          <span class="tile-value good">Features add value</span>
+          <p class="tile-note">A discrete-time hazard on 22 features beats B2 on validation and again on the holdout, with calibrated slopes.</p>
+        </article>
+        <article class="card tile">
+          <span class="tile-label mono">Risk overlay · holdout</span>
+          <span class="tile-value good">+3.0 pt CVaR 5%</span>
+          <p class="tile-note">Excluding each day's riskiest decile (E2) cuts tail losses, CI [+2.4, +3.7]. Risk reduction only: no rule makes money.</p>
+        </article>
+        <article class="card tile">
+          <span class="tile-label mono">Pending</span>
+          <span class="tile-value">Test B</span>
+          <p class="tile-note">A clean forward test on data from 2026-10-22, evaluated once on or after 2027-05-31.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="question" class="section container">
+      <h2 class="section-title mono"><span class="accent">02.</span> The question</h2>
+      <div class="prose">
+        <p>Penny stocks crash often, and volatile ones crash more. That is mostly mechanical: a stock that moves 8% a day will hit a 30% drawdown more often than one that moves 2%. The interesting question is whether anything <strong>beyond volatility</strong> carries information about the next crash.</p>
+        <p>From every eligible stock-day <span class="math">t</span> (a <em>landmark</em>), I follow the stock for <span class="math">k = 1…20</span> bars and record the first bar at which its drawdown from the running peak crosses a threshold. The peak starts at <span class="math">t</span>, never before, and uses the bar low:</p>
+        <span class="math-block">D(t,k) = log low(t+k) − log max(price over t…t+k)</span>
+      </div>
+      <div class="defs">
+        <article class="card">
+          <h3>E1: volatility-scaled crash <span class="tag mono">primary</span></h3>
+          <p><span class="math">D(t,k) ≤ −2 · σ<sub>t</sub> · √20</span>. Under a random walk with the stock's own σ, every stock has roughly the same probability of this event, so the "volatile stocks fall more" effect is removed by construction.</p>
+        </article>
+        <article class="card">
+          <h3>E2: 30% crash <span class="tag mono">secondary</span></h3>
+          <p><span class="math">D(t,k) ≤ log 0.70</span>. The plain-language version: the low falls at least 30% below the running peak within 20 bars.</p>
+        </article>
+      </div>
+      <div class="prose">
+        <p><strong>The bar to beat (B2):</strong> a HAR volatility forecast, fed into a Monte-Carlo first-passage simulation of a driftless random walk, then recalibrated per horizon with a logistic layer. If 22 technical features can't beat that, the honest conclusion is that crash risk here is a volatility question.</p>
+        <p class="muted">Kaplan-Meier, development years: E1 hits 9.8% of penny landmarks within 20 bars, but also 11.3% of a mid-cap reference set, so a volatility-scaled crash is not a penny phenomenon. E2 hits 21.4% of penny landmarks against 3.4% of mid-caps.</p>
+      </div>
+    </section>
+
+    <section id="method" class="section container">
+      <h2 class="section-title mono"><span class="accent">03.</span> Design: built to avoid fooling myself</h2>
+      <figure>
+        <div class="fig-frame"><img src="img/fig_timeline.png" alt="Timeline of the four time-ordered splits: development 2016 to 2022 with walk-forward test years 2018 to 2022, validation 2023 to 2024, Test A 2025 to October 2026, and Test B forward from late October 2026." loading="lazy" width="1113" height="384"></div>
+        <figcaption>Time-ordered splits, never random. Landmarks whose 20-bar window crosses a boundary are purged, with a 20-bar embargo. Validation and Test A were each run exactly once.</figcaption>
+      </figure>
+      <div class="prose">
+        <ul>
+          <li><strong>Frozen specification.</strong> Universe, events, 22 features, models, metric and decision rule were written down and tagged in git before any model saw validation data. Design questions were settled by experiments on development data only, each with its decision rule written before it ran.</li>
+          <li><strong>Point-in-time data.</strong> Universe membership uses the as-traded price and liquidity; returns and events use split-adjusted prices. Series are cut at gaps and ticker reuse, so nothing rolls across a cut. Every feature passes a truncation test: deleting data after <span class="math">t</span> leaves it unchanged.</li>
+          <li><strong>One decision rule.</strong> A model "adds value" only if the 95% calendar-month block-bootstrap CI of its paired IPCW Brier difference vs B2 (at k = 20) lies entirely below 0 <strong>and</strong> its calibration slope lies in [0.8, 1.2].</li>
+          <li><strong>Every trial logged.</strong> 68 model trials with their commit hash, including 4 invalidated by a row-order bug in stratified Cox predictions, which I found on development and kept in the log.</li>
+          <li><strong>No refit.</strong> Models fitted on 2016–22 are scored as-is on later periods, a strict choice made before the holdout.</li>
+        </ul>
+      </div>
+      <h3 class="subtitle mono">Models</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Level</th><th>Model</th><th>Idea</th></tr></thead>
+          <tbody>
+            <tr><td class="num">B0</td><td>Kaplan-Meier</td><td>Constant base rate</td></tr>
+            <tr><td class="num">B1</td><td>Cox on log σ</td><td>Trailing volatility only</td></tr>
+            <tr class="sel"><td class="num">B2</td><td>HAR → random walk → recalibration</td><td>The bar: forecast volatility, simulate first passage</td></tr>
+            <tr><td class="num">1</td><td>B2 with Student-t steps</td><td>Fat tails</td></tr>
+            <tr><td class="num">2</td><td>Stratified Cox PH</td><td>22 features; σ-tercile strata, since Schoenfeld tests rejected proportional hazards</td></tr>
+            <tr><td class="num">2</td><td>Discrete-time hazard</td><td>Logistic on person-period rows, splines for k and 5 features</td></tr>
+            <tr class="ext"><td class="num">ext.</td><td>XGBoost discrete-time hazard</td><td>Shallow trees, 3-seed ensemble on GPU; added after the holdout, descriptive</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="survival" class="section container">
+      <h2 class="section-title mono"><span class="accent">04.</span> Results</h2>
+      <figure>
+        <div class="fig-frame"><img src="img/fig_brier_vs_b2.png" alt="Dot-and-interval chart of each model's Brier score minus B2's, for E1 and E2, on development, validation and Test A. For E1 most intervals touch zero; for E2 the level-2 models and XGBoost sit clearly left of zero on validation and Test A." loading="lazy" width="1562" height="672"></div>
+        <figcaption>Brier score at 20 bars minus B2's (×1/1000); left of 0 is better than B2. For E2, the level-2 models and XGBoost are clearly better out of sample. For E1, gains are small and the selected Cox model's holdout CI touches 0.</figcaption>
+      </figure>
+      <figure>
+        <div class="fig-frame"><img src="img/fig_calibration_slopes.png" alt="Calibration slopes per model and period, with the 0.8 to 1.2 band of the decision rule shaded. For E1, B2 recalibrated and the stratified Cox fall below the band on validation and Test A; for E2 the selected models sit inside it." loading="lazy" width="1562" height="740"></div>
+        <figcaption>Calibration slope (shaded: the [0.8, 1.2] band of the decision rule). The selected E1 model, a stratified Cox, falls below the band on validation (0.75) and the holdout (0.64): that is why E1 fails the rule.</figcaption>
+      </figure>
+
+      <h3 class="subtitle mono">Selected models vs B2 (Δ IPCW Brier at k = 20, 95% CI · calibration slope)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Event · model</th><th>Validation 2023–24</th><th>Test A 2025–26</th><th>Decision</th></tr></thead>
+          <tbody>
+            <tr class="sel"><td>E1 · stratified Cox</td><td class="num">−0.00089 [−0.00164, −0.00014] · 0.75</td><td class="num">−0.00065 [−0.00127, +0.00005] · 0.64</td><td class="no">no</td></tr>
+            <tr class="ext"><td>E1 · XGBoost (descriptive)</td><td class="num">−0.00164 [−0.00258, −0.00083] · 0.88</td><td class="num">−0.00117 [−0.00163, −0.00065] · 0.82</td><td>n/a</td></tr>
+            <tr class="sel"><td>E2 · discrete-time hazard</td><td class="num">−0.00389 [−0.00548, −0.00252] · 0.97</td><td class="num">−0.00645 [−0.01011, −0.00292] · 1.09</td><td class="yes">yes</td></tr>
+            <tr class="ext"><td>E2 · XGBoost (descriptive)</td><td class="num">−0.00848 [−0.01061, −0.00657] · 0.98</td><td class="num">−0.01325 [−0.01707, −0.00923] · 0.94</td><td>n/a</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted prose">B2's own Brier on Test A: 0.06098 (E1) and 0.21480 (E2). Uno's C on Test A, E1: B2 0.638, Cox 0.655, XGBoost 0.682. Observed E2 rate climbed from 24% (development) to 28% (validation) to 37% (Test A).</p>
+
+      <figure>
+        <div class="fig-frame"><img src="img/fig_skill_decomposition.png" alt="Stacked bars of Brier skill over the constant Kaplan-Meier forecast, split into B2, level 2 and XGBoost layers. E1 totals 3.5 and 4.3 percent; E2 totals 13.3 and 21.4 percent, mostly from B2." loading="lazy" width="1218" height="480"></div>
+        <figcaption>Where the skill comes from. Most of it is the volatility forecast (blue). Features add a slice on top, and boosted trees add a bit more. E1 stays nearly unpredictable: 3.5–4.3% Brier skill in total.</figcaption>
+      </figure>
+
+      <h3 class="subtitle mono">What the features carry</h3>
+      <figure>
+        <div class="fig-frame"><img src="img/fig_cox_hazard_ratios.png" alt="Hazard ratios per standard deviation for the 22 features of the stratified Cox model, for E1 and E2. Bollinger width and relative volume raise the hazard for both events; sigma strongly lowers it for E1 but raises it for E2." loading="lazy" width="1570" height="1062"></div>
+        <figcaption>Stratified Cox hazard ratios per SD. Relative volume (<code>log_rvol</code>, ≈ 1.2 per SD) and Bollinger width raise the hazard for both events. σ has an <em>inverse</em> effect for E1 even within σ terciles: volatility mean-reverts, so a high trailing σ overstates the coming σ.</figcaption>
+      </figure>
+      <figure>
+        <div class="fig-frame"><img src="img/fig_xgb_shap.png" alt="Mean absolute SHAP contributions for the top 12 XGBoost inputs. For E1: sigma, k, distance to the 200-day average, the 10 over 60 day volatility ratio and market regime lead. For E2: k, sigma, distance to the 200-day average and Bollinger width lead." loading="lazy" width="1570" height="654"></div>
+        <figcaption>XGBoost extension, mean |SHAP| (descriptive). Depth-3 trees won tuning for both events; deeper trees did worse, so the gain comes from low-order interactions and non-linearities.</figcaption>
+      </figure>
+    </section>
+
+    <section id="overlay" class="section container">
+      <h2 class="section-title mono"><span class="accent">05.</span> Does it matter in a portfolio?</h2>
+      <div class="prose">
+        <p>A hypothetical book takes one trade per landmark: buy at the next open, sell at the close 20 bars later, 3% round-trip cost. Rules: <strong>R0</strong> equal weight, <strong>R1</strong> inverse volatility, <strong>R2</strong> exclude the day's top decile of predicted risk, <strong>R3</strong> = R1 + R2. The metric is CVaR 5%, the mean of the worst 5% of trades, with paired month-block CIs.</p>
+      </div>
+      <figure>
+        <div class="fig-frame"><img src="img/fig_overlay_cvar.png" alt="Change in CVaR 5 percent for each exclusion rule on validation and Test A. Exclusions by the E1 Cox model or by B2 hover around zero; exclusions by the E2 hazard improve CVaR by about 3 points versus R1 and about 4 points versus R0." loading="lazy" width="1333" height="580"></div>
+        <figcaption>Excluding by predicted E1 risk, the pre-registered primary rule, does nothing on either period. Excluding by predicted E2 risk cuts tail losses on both. That rule was chosen after validation and confirmed on the holdout.</figcaption>
+      </figure>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Test A, 3% cost</th><th>Mean net return / trade</th><th>CVaR 5%</th><th>Max drawdown</th></tr></thead>
+          <tbody>
+            <tr><td>R0 equal weight</td><td class="num">−4.6%</td><td class="num">−64.1%</td><td class="num">67%</td></tr>
+            <tr><td>R1 inverse volatility</td><td class="num">−3.9%</td><td class="num">−60.9%</td><td class="num">63%</td></tr>
+            <tr class="sel"><td>R3 E2 exclusion</td><td class="num">−3.5%</td><td class="num">−57.9%</td><td class="num">62%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><p><strong>No rule makes money.</strong> Inverse-volatility weighting alone already improves CVaR by about 3 points. The model-based exclusion adds a similar amount on top. This is a risk-reduction result, not a trading strategy.</p></div>
+    </section>
+
+    <section id="learned" class="section container">
+      <h2 class="section-title mono"><span class="accent">06.</span> What I take from it</h2>
+      <ol class="takeaways prose">
+        <li><strong>A volatility-scaled crash is a volatility question.</strong> Once the threshold is scaled by σ, what remains is mostly how well the coming σ is forecast. 22 technical features add at most about 1% of the Brier score, never with a calibrated slope.</li>
+        <li><strong>A fixed 30% crash carries information beyond volatility.</strong> Relative volume, recent jumps, price level and range features improve the forecast by 2–3% of the Brier score on two out-of-sample periods, and that shows up as lower tail risk.</li>
+        <li><strong>Calibration drifts between regimes.</strong> Slopes stay usable; intercepts don't. A model fitted on 2016–22 and never refitted under-predicts later, crashier regimes. That is the price of a strict no-refit protocol.</li>
+        <li><strong>Model form matters at the margin.</strong> Shallow boosted trees on the same features beat both level-2 forms on both events and reach a calibrated slope for E1. So E1's failure is partly a limit of additive / proportional-hazards forms. But E1's total predictability stays tiny.</li>
+      </ol>
+    </section>
+
+    <section id="caveats" class="section container">
+      <h2 class="section-title mono"><span class="accent">07.</span> Caveats, stated up front</h2>
+      <div class="prose">
+        <ul>
+          <li><strong>Test A is not clean.</strong> A sibling project used the same period with a different target, and a feasibility probe touched yearly event rates before the freeze. Test B is the clean test.</li>
+          <li><strong>The E2 bar.</strong> Against <em>raw</em> (unrecalibrated) B2, the E2 gain on Test A shrinks to about −0.0013 (point estimate, not a pre-registered comparison).</li>
+          <li><strong>Post-hoc choices are labelled.</strong> The E2 overlay rule was picked after validation; XGBoost was added after the holdout was seen. Both are descriptive until Test B.</li>
+          <li><strong>Power.</strong> A 6-month Test B gives a standard error of about 0.0007 on the E1 Brier difference, the size of the gains themselves, so it cannot resolve E1. The E2 gains are 2–4 standard errors, so Test B can plausibly confirm them, but not with certainty.</li>
+          <li><strong>Delistings are censored</strong>, not counted as crashes.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="next" class="section container">
+      <h2 class="section-title mono"><span class="accent">08.</span> Next, and stack</h2>
+      <div class="prose">
+        <p><strong>Next:</strong> Test B, landmarks from 2026-10-22 to 2027-04-30, scored once with the same fitted models and rules. Then random survival forests, DeepSurv and WTTE-RNN as a comparison (protocol already committed, runs on Google Colab), and point-in-time SEC EDGAR fundamentals under a separate pre-registration.</p>
+      </div>
+      <ul class="chips">
+        <li class="chip">Python</li><li class="chip">uv</li><li class="chip">pandas</li><li class="chip">lifelines</li>
+        <li class="chip">IPCW Brier · Uno's C</li><li class="chip">Block bootstrap</li><li class="chip">XGBoost (GPU)</li><li class="chip">SHAP</li>
+        <li class="chip">TA-Lib</li><li class="chip">Alpaca SIP data</li><li class="chip">pytest</li><li class="chip">Google Colab</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer container mono case-footer">
+    <span>© <span id="year"></span> Sathapana Chawananon</span>
+    <a href="../../">&larr; back to portfolio</a>
+  </footer>
+
+  <script>
+    function currentTheme() {
+      var set = document.documentElement.dataset.theme;
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    }
+    document.getElementById("theme-toggle").addEventListener("click", function () {
+      var next = currentTheme() === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem("theme", next); } catch (e) { /* storage unavailable */ }
+    });
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

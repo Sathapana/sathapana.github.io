@@ -1,0 +1,105 @@
+/* Case-study pages (projects/<slug>/). Builds on style.css tokens. */
+
+.case-hero { padding-top: 72px; padding-bottom: 8px; }
+.case-hero h1 { font-size: clamp(1.9rem, 5vw, 3rem); }
+.back { display: inline-block; margin-bottom: 20px; color: var(--text-dim); font-size: 14px; }
+.back:hover { color: var(--text); text-decoration: none; }
+.lede { max-width: 720px; font-size: 1.15rem; color: var(--text); margin: 20px 0 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 18px 0 0; padding: 0; list-style: none; color: var(--text-dim); font-size: 13px; }
+.facts li::before { content: "# "; color: var(--accent); }
+
+.prose { max-width: 760px; }
+.prose p, .prose ul, .prose ol { margin: 0 0 16px; }
+.prose li { margin-bottom: 6px; }
+.prose strong { color: var(--text); }
+.prose h3 { margin: 32px 0 12px; font-size: 1.05rem; font-weight: 600; }
+.muted { color: var(--text-dim); }
+
+code, .math {
+  font-family: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  font-size: 0.88em;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  color: var(--text);
+}
+.math-block {
+  display: block;
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border-left: 2px solid var(--accent);
+  background: var(--bg-elev);
+  font-family: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+/* Key-result tiles */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+.tile { display: flex; flex-direction: column; gap: 6px; }
+.tile-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+.tile-value { font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: var(--text); }
+.tile-value.good { color: var(--accent); }
+.tile-note { font-size: 14px; color: var(--text-dim); margin: 0; }
+
+/* Two-column definitions */
+.defs { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 0 0 20px; }
+.defs .card p { margin: 0; color: var(--text-dim); font-size: 15px; }
+.defs .card h3 { font-size: 15px; font-weight: 600; margin: 0 0 8px; }
+.tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; color: var(--text-dim); vertical-align: middle; font-weight: 400; }
+
+/* Figures: matplotlib PNGs have an off-white background, so frame them in a matching panel. */
+figure { margin: 8px 0 28px; }
+.fig-frame {
+  background: #fcfcfa;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  overflow: hidden;
+}
+.fig-frame img { display: block; width: 100%; height: auto; }
+figcaption { margin-top: 10px; font-size: 14px; color: var(--text-dim); max-width: 760px; }
+
+/* Tables scroll inside their wrapper, never the page. */
+.table-wrap { overflow-x: auto; margin: 0 0 24px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-elev); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 9px 14px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+th { font-weight: 600; color: var(--text-dim); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; }
+tbody tr:last-child td { border-bottom: 0; }
+td.num { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 13px; }
+tr.sel td:first-child { font-weight: 600; }
+tr.ext td { color: var(--text-dim); font-style: italic; }
+.yes { color: var(--accent); font-weight: 600; }
+.no { color: #e5534b; font-weight: 600; }
+:root[data-theme="light"] .no { color: #cf222e; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .no { color: #cf222e; } }
+
+/* Callout */
+.callout {
+  margin: 0 0 24px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-2);
+  border-radius: 8px;
+  background: var(--bg-elev);
+  max-width: 760px;
+}
+.callout p { margin: 0; }
+
+/* Numbered takeaways */
+.takeaways { counter-reset: t; list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.takeaways li { counter-increment: t; position: relative; padding-left: 44px; }
+.takeaways li::before {
+  content: counter(t, decimal-leading-zero);
+  position: absolute; left: 0; top: 1px;
+  font-family: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  color: var(--accent); font-size: 14px;
+}
+
+.case-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+
+@media (max-width: 760px) {
+  .case-hero { padding-top: 40px; }
+  .fig-frame { padding: 6px; }
+  th, td { padding: 8px 10px; }
+}

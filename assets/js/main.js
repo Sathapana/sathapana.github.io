@@ -2,6 +2,7 @@
 const content = {
   en: {
     "nav.about": "About",
+    "nav.projects": "Projects",
     "nav.experience": "Experience",
     "nav.skills": "Skills",
     "nav.education": "Education",
@@ -75,11 +76,24 @@ const content = {
       { title: "BSc in Chemistry", org: "Pierre and Marie Curie University", dates: "2018" },
       { title: "DUT in Chemistry", detail: "2-year technical degree", org: "IUT Montpellier-Sète", dates: "2017" }
     ],
-    languages: ["Thai · native", "French · bilingual", "English · bilingual"]
+    languages: ["Thai · native", "French · bilingual", "English · bilingual"],
+    "projects.caseStudy": "Case study →",
+    "projects.code": "Code",
+    projects: [
+      {
+        title: "Crash hazard in US penny stocks",
+        meta: "Personal research project · 2026",
+        summary: "For a volatile US small cap on a given day, what is the probability of a crash within 20 trading days, and does anything predict it better than a volatility forecast? A pre-registered survival study on 590,000 stock-days, with time-ordered validation and a run-once holdout.",
+        tags: ["Survival analysis", "Cox PH", "Discrete-time hazard", "XGBoost", "Calibration", "Pre-registration"],
+        href: "projects/penny-stock-survival/",
+        repo: "https://github.com/Sathapana/PennyStock_survival"
+      }
+    ]
   },
 
   fr: {
     "nav.about": "Profil",
+    "nav.projects": "Projets",
     "nav.experience": "Expérience",
     "nav.skills": "Compétences",
     "nav.education": "Formation",
@@ -153,7 +167,19 @@ const content = {
       { title: "Licence de chimie", org: "Université Pierre et Marie Curie", dates: "2018" },
       { title: "DUT chimie", org: "IUT de Montpellier-Sète", dates: "2017" }
     ],
-    languages: ["Thaï · langue maternelle", "Français · bilingue", "Anglais · bilingue"]
+    languages: ["Thaï · langue maternelle", "Français · bilingue", "Anglais · bilingue"],
+    "projects.caseStudy": "Étude de cas (en anglais) →",
+    "projects.code": "Code",
+    projects: [
+      {
+        title: "Risque de krach des penny stocks américaines",
+        meta: "Projet de recherche personnel · 2026",
+        summary: "Pour une small cap américaine volatile, un jour donné, quelle est la probabilité d'un krach dans les 20 séances suivantes, et peut-on la prédire mieux qu'une prévision de volatilité ? Une étude de survie pré-enregistrée sur 590 000 jours-actions, avec validation chronologique et un test final exécuté une seule fois.",
+        tags: ["Analyse de survie", "Cox PH", "Hazard en temps discret", "XGBoost", "Calibration", "Pré-enregistrement"],
+        href: "projects/penny-stock-survival/",
+        repo: "https://github.com/Sathapana/PennyStock_survival"
+      }
+    ]
   }
 };
 
@@ -197,6 +223,29 @@ function renderSkills(t) {
   }));
 }
 
+function renderProjects(t) {
+  const list = document.getElementById("projects-list");
+  list.replaceChildren(...t.projects.map(p => {
+    const card = el("article", "card project-card");
+    const title = el("h3", "project-title");
+    const link = el("a", "", p.title);
+    link.href = p.href;
+    title.append(link);
+    const chips = el("ul", "chips");
+    p.tags.forEach(tag => chips.append(el("li", "chip", tag)));
+    const links = el("p", "project-links mono");
+    const study = el("a", "", t["projects.caseStudy"]);
+    study.href = p.href;
+    const repo = el("a", "", t["projects.code"]);
+    repo.href = p.repo;
+    repo.target = "_blank";
+    repo.rel = "noopener";
+    links.append(study, repo);
+    card.append(title, el("p", "project-meta mono", p.meta), el("p", "project-summary", p.summary), chips, links);
+    return card;
+  }));
+}
+
 function renderEducation(t) {
   const list = document.getElementById("education-list");
   list.replaceChildren(...t.education.map(e => {
@@ -220,6 +269,7 @@ function setLanguage(lang) {
     const value = t[node.dataset.i18n];
     if (value != null) node.textContent = value;
   });
+  renderProjects(t);
   renderExperience(t);
   renderSkills(t);
   renderEducation(t);
