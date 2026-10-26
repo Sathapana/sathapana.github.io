@@ -81,6 +81,14 @@ const content = {
     "projects.code": "Code",
     projects: [
       {
+        title: "Hidden anomalies in a greenhouse climate",
+        meta: "Personal research project · 2026",
+        summary: "Temperature, humidity and CO₂ can each look normal while their combination is impossible. A white-box study of 15 multivariate detectors on six greenhouse compartments, from the Mahalanobis distance to a control chart on context residuals: a frozen protocol, every alarm explained per variable, and a deployment check on past data only.",
+        tags: ["Anomaly detection", "Mahalanobis", "MEWMA", "Calibration", "Explainability", "Time series"],
+        href: "projects/greenhouse-anomaly-detection/",
+        repo: "https://github.com/Sathapana/Greenhouse_Plant_Growth"
+      },
+      {
         title: "Crash hazard in US penny stocks",
         meta: "Personal research project · 2026",
         summary: "For a volatile US small cap on a given day, what is the probability of a crash within 20 trading days, and does anything predict it better than a volatility forecast? A pre-registered survival study on 590,000 stock-days, with time-ordered validation and a run-once holdout.",
@@ -171,6 +179,14 @@ const content = {
     "projects.caseStudy": "Étude de cas (en anglais) →",
     "projects.code": "Code",
     projects: [
+      {
+        title: "Anomalies cachées dans le climat d'une serre",
+        meta: "Projet de recherche personnel · 2026",
+        summary: "Température, humidité et CO₂ peuvent chacun paraître normaux alors que leur combinaison est impossible. Une étude « boîte blanche » de 15 détecteurs multivariés sur six compartiments de serre, de la distance de Mahalanobis à une carte de contrôle sur résidus de contexte : un protocole figé, chaque alarme expliquée par variable et un test de déploiement sur données passées uniquement.",
+        tags: ["Détection d'anomalies", "Mahalanobis", "MEWMA", "Calibration", "Explicabilité", "Séries temporelles"],
+        href: "projects/greenhouse-anomaly-detection/",
+        repo: "https://github.com/Sathapana/Greenhouse_Plant_Growth"
+      },
       {
         title: "Risque de krach des penny stocks américaines",
         meta: "Projet de recherche personnel · 2026",
