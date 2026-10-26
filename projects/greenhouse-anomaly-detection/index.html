@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Greenhouse Anomaly Detection</title>
-  <meta name="description" content="A white-box study of multivariate anomaly detection on greenhouse climate data: from the Mahalanobis distance to a detector checked for deployment, with every alarm explained per variable. By Sathapana Chawananon.">
+  <meta name="description" content="A white-box study of multivariate anomaly detection on greenhouse climate data: what the data revealed first, how each finding shaped the methods, and whether the winner holds up in deployment. By Sathapana Chawananon.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -29,6 +29,7 @@
       <a class="brand mono" href="../../">sath<span class="accent">@</span>paris<span class="dim">:~/projects$</span></a>
       <ul class="nav-links">
         <li><a href="#results">Results</a></li>
+        <li><a href="#findings">Data</a></li>
         <li><a href="#method">Method</a></li>
         <li><a href="#deployment">Deployment</a></li>
         <li><a href="#caveats">Caveats</a></li>
@@ -47,8 +48,8 @@
       <a class="back mono" href="../../#projects">&larr; back to portfolio</a>
       <p class="prompt mono"><span class="accent">$</span> cat projects/greenhouse-anomaly-detection/README</p>
       <h1>Hidden anomalies in a greenhouse climate</h1>
-      <p class="headline mono">Multivariate anomaly detection · white-box · from evaluation to deployment</p>
-      <p class="lede">A fault can leave temperature, humidity and CO₂ each inside their normal band while their <strong>combination</strong> is impossible. How far does a strictly white-box approach go in detecting such anomalies — starting from the Mahalanobis distance and relaxing one assumption at a time — and does the winner still work when it can only learn from the past?</p>
+      <p class="headline mono">Read the data first · white-box anomaly detection · from evaluation to deployment</p>
+      <p class="lede">A fault can leave temperature, humidity and CO₂ each inside their normal band while their <strong>combination</strong> is impossible. Before building any detector, I read the data: what it measures, how its "normal" is structured, how it drifts. Those findings decided the design — and predicted most of the results.</p>
       <ul class="facts mono">
         <li>6 compartments · Dec 2019 → May 2020</li>
         <li>5-minute data · 47,809 steps each</li>
@@ -99,25 +100,113 @@
         <p>A greenhouse climate is regulated through <strong>coupled</strong> variables: switching the lamps on heats the air and lowers its relative humidity; opening the vents pulls temperature, humidity and CO₂ towards the outdoor values. Monitoring each variable against its own band misses faults that break these relations — a stuck or drifting probe, a failed aspiration fan, lamps on without the expected warming.</p>
         <p>The textbook answer is the <strong>Mahalanobis distance</strong>, the distance to the centre of a multivariate Gaussian in units of its own covariance:</p>
         <span class="math-block">D²(x) = (x − μ)ᵀ Σ⁻¹ (x − μ)</span>
-        <p>Its assumptions — one Gaussian regime, clean training data, independent samples — are all violated by greenhouse data. The project relaxes them one at a time and measures what each step buys, under a strict <strong>white-box</strong> rule: every alarm must be explained per variable, every threshold must have a stated false-alarm rate.</p>
-        <p><strong>Data.</strong> The Autonomous Greenhouse Challenge, 2nd edition (Wageningen University &amp; Research, open data): six glasshouse compartments growing cherry tomatoes, five run by AI teams and one by commercial growers. Light and airflow are not measured indoors, so the question became: <em>is the measured climate consistent with what lamps, set-points and weather imply?</em> Monitored: air temperature, humidity (logit scale), CO₂. Context: lamps × sun regime, time of day, weather, the realised climate set-points.</p>
+        <p>Its assumptions — one Gaussian regime, clean training data, independent samples — are exactly what the data has to be checked against. The rule throughout is <strong>white-box</strong>: every alarm explained per variable, every threshold with a stated false-alarm rate.</p>
+      </div>
+    </section>
+
+    <section id="data" class="section container">
+      <h2 class="section-title mono"><span class="accent">03.</span> The data, and what it can't tell us</h2>
+      <div class="prose">
+        <p>The Autonomous Greenhouse Challenge, 2nd edition (Wageningen University &amp; Research, open data): six glasshouse compartments growing cherry tomatoes for 166 days, five controlled by AI teams and one by commercial growers, logged every 5 minutes — indoor climate, actuators, realised set-points, outdoor weather.</p>
+        <p><strong>The first finding was a gap.</strong> The project was framed around temperature, humidity, light and airflow — but light and airflow are not measured indoors: there is only lamp status, a <em>computed</em> light value and vent openings, and the controller's humidity deficit is just a function of temperature and humidity. So the question changed: not "is any reading abnormal?" but <strong>"is the measured climate consistent with what lamps, set-points and weather imply?"</strong> Monitored: air temperature, humidity (logit scale, since it is bounded at 100%) and CO₂. Context: the lamp × sun regime, time of day, weather, the realised set-points.</p>
       </div>
       <figure>
         <div class="fig-frame"><img src="img/fig02_data_week.png" alt="Four stacked panels over one week: bars for sun and lamp periods, then air temperature, relative humidity and CO2 time series with a strong daily cycle." loading="lazy" width="1380" height="807"></div>
-        <figcaption>One week of the growers' compartment. Lamps raise the air temperature by 1.5–2.1 °C within 30 minutes; the lamp × sun regime alone explains a median 63% of the temperature variance.</figcaption>
+        <figcaption>One week of the growers' compartment: the monitored climate (bottom three panels) and two pieces of its context (top). Lamps raise the air temperature by 1.5–2.1 °C within 30 minutes.</figcaption>
       </figure>
     </section>
 
-    <section id="method" class="section container">
-      <h2 class="section-title mono"><span class="accent">03.</span> Design: built to avoid fooling myself</h2>
+    <section id="findings" class="section container">
+      <h2 class="section-title mono"><span class="accent">04.</span> What the data revealed</h2>
       <div class="prose">
-        <p>There are no anomaly labels, so the evaluation was designed — and frozen in a git tag — before the first method ran.</p>
+        <p>Eight exploratory steps — inventory, quality, distributions, time structure, actuator response, multivariate structure, physics, compartments — each ended with a written conclusion and a decision. Six findings shaped everything that followed.</p>
+      </div>
+
+      <h3 class="subtitle mono">A fault only a cross-check could see</h3>
+      <figure>
+        <div class="fig-frame"><img src="img/figE1_crosscheck_fault.png" alt="Two panels for 8 January 2020: the logged air temperature of the growers' compartment climbs linearly to 34 degrees while the five other compartments stay near 23; the humidity deficit computed by the climate computer stays near zero while the same quantity recomputed from the logged values is several times higher." loading="lazy" width="1346" height="774"></div>
+        <figcaption>The logged temperature climbs to 34 °C in January while heating and vents do not react; the climate computer's own humidity deficit contradicts the logged values for about 3.5 hours.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>Seven real sensor faults turned up, all in the growers' compartment: impossible values, a temperature dropout to −1 °C — and this one, which the univariate range and spike rules missed. Only a <strong>cross-variable consistency check</strong> exposed it: the logged values were not what the controller saw.</p>
+        <p><strong>So:</strong> faulty values are flagged, never deleted — they are the real-fault test set — and the project's core idea (look at variables jointly) was already at work in the cleaning.</p>
+      </div>
+
+      <h3 class="subtitle mono">"Normal" comes in regimes — and correlations flip sign</h3>
+      <figure>
+        <div class="fig-frame"><img src="img/figE2_regimes.png" alt="Four scatter panels of CO2 against air temperature, one per regime (night, night with lamps, day, day with lamps), each with its 99 percent ellipse; the correlation is +0.41 at night and about −0.27 in the other three regimes, +0.10 pooled." loading="lazy" width="1850" height="494"></div>
+        <figcaption>Temperature vs CO₂ in the growers' compartment: +0.41 at night, −0.26 to −0.28 in the other regimes, +0.10 when pooled. One global ellipse averages incompatible shapes.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>The lamp × sun regime alone explains a median 63% of the temperature variance (27% of humidity, 21% of CO₂). Within a regime, tails are heavier than Gaussian: per-regime Gaussian models already alarmed 1.4–3.1% of the time instead of 1%.</p>
+        <p><strong>So:</strong> condition on context rather than fit one ellipse, and read thresholds from the empirical tail rather than from a Gaussian.</p>
+      </div>
+
+      <h3 class="subtitle mono">The season drifts</h3>
+      <figure>
+        <div class="fig-frame" style="max-width: 760px;"><img src="img/figE3_seasonal_drift.png" alt="Dot chart per compartment on a log scale: with a blocked split the per-variable bands alarm below 1 percent; with a chronological split, trained on winter and tested in late spring, they alarm 8 to 33 percent." loading="lazy" width="1082" height="593"></div>
+        <figcaption>Per-variable bands trained on winter and tested in late spring alarm 8–33% of the time at a nominal 1%; with a blocked split, below 1%.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>Lamps stop after March, growers change strategy, the crop grows: a model trained on the past is miscalibrated in the future <em>for a reason that has nothing to do with anomalies</em>.</p>
+        <p><strong>So:</strong> the main protocol uses a <strong>blocked split</strong> (seven-day blocks train · train · train · validation · test, every season in every set), and "train on the past, test on the future" was kept as a separate test — it became the deployment section below.</p>
+      </div>
+
+      <h3 class="subtitle mono">Most of the variance is the schedule; anomalies fade within hours</h3>
+      <figure>
+        <div class="fig-frame"><img src="img/figE4_temporal_structure.png" alt="Left: stacked bars per compartment and variable splitting the variance into daily profile, slow level and anomaly; the daily profile dominates. Right: autocorrelation of the anomaly part falling below 0.1 within about three to four hours for every series." loading="lazy" width="1710" height="540"></div>
+        <figcaption>Left: daily profile 36–87%, slow level 10–47%, anomaly 3–33% of the variance. Right: the anomaly part decorrelates (below 0.1) within 2.6–4.1 hours.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>A distance on the raw values would mostly score the time of day and the season. And because alarms come in runs, the effective sample is only 1–10% of the row count: naive confidence intervals would be about ten times too narrow. Averaging to 30 minutes would hide the real faults, which last 1–4 steps.</p>
+        <p><strong>So:</strong> score <strong>residuals</strong>, not raw values; keep the 5-minute step; put a one-day buffer around held-out weeks; give every rate a <strong>block-bootstrap</strong> interval that resamples whole compartment-weeks.</p>
+      </div>
+
+      <h3 class="subtitle mono">Three variables, no low-dimensional structure</h3>
+      <figure>
+        <div class="fig-frame" style="max-width: 720px;"><img src="img/figE5_pca_structure.png" alt="Grouped bars per compartment of the variance carried by each of the three principal components: about 48 to 57 percent, 24 to 37 percent and 7 to 21 percent." loading="lazy" width="1049" height="516"></div>
+        <figcaption>Each principal component carries real variance (PC1 48–57%, PC3 still 7–21%); the correlation matrix is well conditioned.</figcaption>
+      </figure>
+      <div class="prose">
+        <p><strong>So:</strong> PCA-based process control — split the score into a distance <em>inside</em> the main components and a distance <em>from</em> them — has little to split. It stayed in the ladder as a test, with that warning written down.</p>
+      </div>
+
+      <h3 class="subtitle mono">Each team has its own "normal"</h3>
+      <figure>
+        <div class="fig-frame" style="max-width: 600px;"><img src="img/figE6_strategy_specific.png" alt="Six-by-six heatmap of false-alarm rates when a Mahalanobis model fitted on one compartment is used on another: 0.3 to 1.1 percent on the diagonal, from 0 to 30 percent off it." loading="lazy" width="921" height="740"></div>
+        <figcaption>A Mahalanobis model fitted on one compartment (rows) and used on another (columns): 0.3–1.1% on its own compartment, 0–30% elsewhere — flooded with alarms or blind.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>Pooling all compartments hides this: a pooled model looks calibrated only because its covariance is wider, so faults must be 1.15–1.67 times larger to be detected. Calibration has to be read together with sensitivity.</p>
+        <p><strong>So:</strong> one model per compartment.</p>
+      </div>
+    </section>
+
+    <section id="plan" class="section container">
+      <h2 class="section-title mono"><span class="accent">05.</span> From findings to a plan</h2>
+      <div class="prose">
+        <p>Each finding fixed a decision and, in most cases, an expectation — written in the lab book before any method ran. The last column is what happened.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="wrap">
+          <thead><tr><th>Finding</th><th>Decision</th><th>What the data led me to expect</th><th>What happened</th></tr></thead>
+          <tbody>
+            <tr><td>Light and airflow not measured</td><td>Monitor the climate <em>given</em> its context</td><td>Context and residual models should beat plain Mahalanobis</td><td class="yes">✓ on every hidden-anomaly measure</td></tr>
+            <tr><td>A fault visible only jointly</td><td>Flag, don't delete; real-fault test set</td><td>Multivariate checks see what univariate rules miss</td><td class="yes">✓ in-band breaks: −0.04 vs 0.34</td></tr>
+            <tr><td>Regimes, sign-flipping correlations, heavy tails</td><td>Condition on context; empirical tails</td><td>Regime-only Gaussians over-alarm; residual scoring is the candidate</td><td class="yes">✓ 1.91% vs nominal 1%; residual models win</td></tr>
+            <tr><td>Seasonal drift</td><td>Blocked split; past → future as a separate test</td><td>A model never refitted will be miscalibrated</td><td class="yes">✓ 7–41% (see deployment)</td></tr>
+            <tr><td>Variance is schedule; short anomaly memory</td><td>Residuals, 5-minute step, block bootstrap</td><td>A raw-value distance mostly scores time of day</td><td class="yes">✓ residual and chart models win</td></tr>
+            <tr><td>No low-dimensional structure</td><td>Keep PCA as a test</td><td>The T² / SPE split has little to work with</td><td class="yes">✓ the split separates nothing</td></tr>
+            <tr><td>Strategy-specific "normal"</td><td>One model per compartment</td><td>Borrowed models are flooded or blind</td><td class="yes">✓ — context models transfer even worse</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 class="subtitle mono">Guardrails</h3>
+      <div class="prose">
         <ul>
-          <li><strong>Blocked split.</strong> A chronological split confounds calibration with seasonal drift (clean late-spring data exceed winter-trained bands 2–27% of the time). Seven-day blocks in the pattern train · train · train · validation · test, with a one-day buffer, put every season in every set. Weekly past-only refits came later, as the deployment check.</li>
-          <li><strong>Synthetic anomalies with a null control.</strong> Five types injected into the held-out weeks with fixed seeds. Every detection rate is reported as an <em>excess</em> over the same windows on clean data, so chance alarms do not count.</li>
-          <li><strong>Interior check.</strong> Spliced injections create jumps at their edges that one-step change detectors react to; detection is also counted only inside the event, away from its edges.</li>
-          <li><strong>Honest intervals.</strong> Alarms come in runs, so every rate has a block-bootstrap interval resampling whole compartment-weeks; independent-row intervals would be about ten times too narrow.</li>
-          <li><strong>Flag, don't delete.</strong> Faulty-looking values are flagged, never removed: they are the seven real sensor faults of the test set (including a temperature reading that drops to −1 °C).</li>
+          <li><strong>Synthetic anomalies with a null control.</strong> Five types injected into the held-out weeks with fixed seeds; every detection rate is an <em>excess</em> over the same windows on clean data, so chance alarms do not count.</li>
+          <li><strong>Interior check</strong> (added mid-way, see 08). Spliced injections create jumps at their edges that one-step change detectors react to; detection is also counted only inside the event, away from its edges.</li>
+          <li><strong>A frozen protocol.</strong> Splits, injections and metrics were tagged in git before the first method branch; every method faced the same test.</li>
           <li><strong>Every decision logged.</strong> 32 decisions with their rationale and the alternatives rejected, 28 lab-book entries with a falsifiable hypothesis each, negative results kept.</li>
         </ul>
       </div>
@@ -129,22 +218,25 @@
         <div class="fig-frame"><img src="img/fig04_injection_types.png" alt="Five small panels, one injected event each: a spike, a correlation break replacing three hours of humidity, a stuck sensor, a slow drift, and a night segment with the opposite lamp state." loading="lazy" width="1966" height="438"></div>
         <figcaption>One injected event of each type (blue) over the clean series (grey). The correlation break (I2) is the hidden anomaly: its values come from real data of the same variable, so they usually stay inside the band.</figcaption>
       </figure>
-      <h3 class="subtitle mono">The method ladder</h3>
+    </section>
+
+    <section id="method" class="section container">
+      <h2 class="section-title mono"><span class="accent">06.</span> Methods, each answering a finding</h2>
       <figure>
         <div class="fig-frame"><img src="img/fig05_method_ladder.png" alt="Eight boxes in a row, from univariate bands and the Mahalanobis distance through robust MCD, PCA-MSPC, regime-conditional, residual-based and control-chart methods to black-box benchmarks, each labelled with the assumption it relaxes." loading="lazy" width="1425" height="393"></div>
       </figure>
       <div class="table-wrap">
-        <table>
-          <thead><tr><th>#</th><th>Family</th><th>Relaxes</th><th>Outcome</th></tr></thead>
+        <table class="wrap">
+          <thead><tr><th>#</th><th>Family</th><th>Relaxes</th><th>Answers</th><th>Outcome</th></tr></thead>
           <tbody>
-            <tr><td class="num">01</td><td>Univariate bands</td><td>— (baseline)</td><td>Calibrated; blind to in-band breaks</td></tr>
-            <tr><td class="num">02</td><td>Mahalanobis distance</td><td>— (starting model)</td><td>Calibrated; sees in-band breaks, weakly</td></tr>
-            <tr><td class="num">03</td><td>Robust covariance (MCD)</td><td>Clean training data</td><td>Rejects normal sunny middays: "normal" is a mixture</td></tr>
-            <tr><td class="num">04</td><td>PCA process control (T², SPE)</td><td>Full-rank structure</td><td>No gain with three variables</td></tr>
-            <tr><td class="num">05</td><td>Regime-conditional</td><td>A single regime</td><td>Regime labels alone: miscalibrated; context regression: calibrated and strong</td></tr>
-            <tr><td class="num">06</td><td>Residual-based (VARX, static)</td><td>Independence in time</td><td>One-step innovations detect changes; static residuals detect states</td></tr>
-            <tr class="sel"><td class="num">07</td><td>Control charts (MEWMA)</td><td>Single-step detection</td><td>Best for stuck sensors and drifts; λ = 0.2 the best compromise</td></tr>
-            <tr class="ext"><td class="num">08</td><td>Black-box benchmarks</td><td>Gaussian shape</td><td>Below the white-box models on every anomaly type</td></tr>
+            <tr><td class="num">01</td><td>Univariate bands</td><td>— (baseline)</td><td>The hidden-anomaly premise</td><td>Calibrated; blind to in-band breaks</td></tr>
+            <tr><td class="num">02</td><td>Mahalanobis distance</td><td>— (starting model)</td><td>The hidden-anomaly premise</td><td>Calibrated; sees in-band breaks, weakly</td></tr>
+            <tr><td class="num">03</td><td>Robust covariance (MCD)</td><td>Clean training data</td><td>Faults hiding in the training data</td><td>Rejects normal sunny middays: "normal" is a mixture</td></tr>
+            <tr><td class="num">04</td><td>PCA process control (T², SPE)</td><td>Full-rank structure</td><td>No low-dimensional structure</td><td>No gain with three variables</td></tr>
+            <tr><td class="num">05</td><td>Regime-conditional</td><td>A single regime</td><td>Regimes and context</td><td>Regime labels alone: miscalibrated; context regression: calibrated and strong</td></tr>
+            <tr><td class="num">06</td><td>Residual-based (VARX, static)</td><td>Independence in time</td><td>Schedule-dominated variance</td><td>One-step innovations detect changes; static residuals detect states</td></tr>
+            <tr class="sel"><td class="num">07</td><td>Control charts (MEWMA)</td><td>Single-step detection</td><td>Persistent faults, short anomaly memory</td><td>Best for stuck sensors and drifts; λ = 0.2 the best compromise</td></tr>
+            <tr class="ext"><td class="num">08</td><td>Black-box benchmarks</td><td>Gaussian shape</td><td>Is white-box a handicap?</td><td>Below the white-box models on every anomaly type</td></tr>
           </tbody>
         </table>
       </div>
@@ -155,11 +247,11 @@
       </div>
     </section>
 
-    <section id="findings" class="section container">
-      <h2 class="section-title mono"><span class="accent">04.</span> Results under the main protocol</h2>
+    <section id="outcome" class="section container">
+      <h2 class="section-title mono"><span class="accent">07.</span> Results: did the data's predictions hold?</h2>
       <figure>
         <div class="fig-frame"><img src="img/fig06_calibration.png" alt="Dot-and-interval chart of the false-alarm rate of 15 detectors against the nominal 1 percent line; 13 intervals reach 1 percent, the robust MCD and per-regime Gaussian lie above it." loading="lazy" width="1153" height="742"></div>
-        <figcaption>Calibration: 13 of 15 detectors are calibrated. Regime labels alone break it (1.91%), and so does the robust estimator (2.51%), which discards normal sunny middays as outliers.</figcaption>
+        <figcaption>Calibration: 13 of 15 detectors are calibrated. As the regime finding predicted, regime labels alone break it (1.91%); the robust estimator does too (2.51%) — a surprise, below.</figcaption>
       </figure>
       <figure>
         <div class="fig-frame"><img src="img/fig07_detection_heatmap.png" alt="Heatmap of detection excess for 15 detectors and six anomaly categories; boxed cells mark the top group. MEWMA lambda 0.2 is boxed in five of six columns." loading="lazy" width="1325" height="929"></div>
@@ -171,17 +263,29 @@
       </figure>
       <div class="prose">
         <ul>
-          <li><strong>Attribution works, the T²/SPE split does not.</strong> With three monitored variables there is no low-dimensional structure to split; contributions name the injected variable in 86–91% of detected events.</li>
-          <li><strong>Disease-risk windows.</strong> No detector alarms more often during sustained humidity above 90% (a grey-mould risk condition): humid nights are normal operation here. Without disease records, this is association only.</li>
+          <li><strong>Attribution works, the T²/SPE split does not</strong> — as the structure finding warned. Contributions name the injected variable in 86–91% of detected events.</li>
+          <li><strong>Disease-risk windows.</strong> No detector alarms more often during sustained humidity above 90% (a grey-mould risk condition): the exploratory analysis had already shown that humid nights are routine here (12–30% of rows). Without disease records, this is association only.</li>
           <li><strong>Two checks on the winner.</strong> Two of the 55 compartment × set-point pairs turned out to be computed by the controller from the climate itself, which would leak the true state into a synthetic test; the recommended detector uses the exogenous set-points only. Its λ was chosen after seeing test results — so its levels are optimistic — but a bootstrap of the whole selection rule picks it 98% of the time.</li>
         </ul>
       </div>
     </section>
 
-    <section id="deployment" class="section container">
-      <h2 class="section-title mono"><span class="accent">05.</span> From evaluation to deployment</h2>
+    <section id="surprises" class="section container">
+      <h2 class="section-title mono"><span class="accent">08.</span> What the data did not foresee</h2>
       <div class="prose">
-        <p>The blocked split fits each model on weeks that <em>surround</em> its test weeks. A deployed detector can only learn from the past. Four checks, each with its hypothesis and decision rule written before it ran, measure the distance.</p>
+        <p>Reading the data first did not make the results predictable. Three surprises, each of which changed the project:</p>
+        <ul>
+          <li><strong>The robust estimator threw away normal operation.</strong> Minimum covariance determinant (MCD) estimation is meant to ignore faults hidden in the training data; here it discarded 10–16% of the training rows, concentrated in sunny spring middays. "Normal" is a mixture of regimes, not one ellipse with a few contaminating points.</li>
+          <li><strong>The evaluation itself had a blind spot.</strong> One-step change detectors scored well on injected anomalies by reacting to the jumps at their edges, not to the anomalous state. The interior check was added mid-way — documented as a decision, with the earlier results left intact.</li>
+          <li><strong>Refitting does not fix the threshold.</strong> Even refitted every week, a threshold read from the training tail is optimistic one week ahead. And the fix — a threshold from recent out-of-sample scores — can be inflated by a single abnormal week.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="deployment" class="section container">
+      <h2 class="section-title mono"><span class="accent">09.</span> From evaluation to deployment</h2>
+      <div class="prose">
+        <p>The drift finding left a debt: the blocked split fits each model on weeks that <em>surround</em> its test weeks, while a deployed detector can only learn from the past. Four checks, each with its hypothesis and decision rule written before it ran, measure the distance.</p>
       </div>
       <figure>
         <div class="fig-frame"><img src="img/fig11_deployment_calibration.png" alt="Dot-and-interval chart on a log scale for six detectors under four settings. Never refitted: 7 to 41 percent. Weekly refit with training-tail threshold: 1.2 to 6.2 percent. Weekly refit with out-of-sample threshold: 0.5 to 1.7 percent, close to the blocked split." loading="lazy" width="1244" height="748"></div>
@@ -200,32 +304,32 @@
       </div>
       <figure>
         <div class="fig-frame"><img src="img/fig10_transfer.png" alt="Two six-by-six heatmaps of false-alarm rates when a model fitted on one compartment is used on another: the Mahalanobis model mostly stays below 5 percent off the diagonal (median 2.5), the MEWMA model mostly lies between 20 and 95 percent." loading="lazy" width="1404" height="640"></div>
-        <figcaption>Borrowed from another compartment: "normal" encodes each team's control strategy, and the models that explain it best transfer worst.</figcaption>
+        <figcaption>Borrowed from another compartment, the global model (left) is the one from the exploratory analysis; the recommended detector (right) transfers far worse — the models that explain a team's strategy best are the most specific to it.</figcaption>
       </figure>
       <div class="prose">
         <p><strong>Why weekly refitting is not enough.</strong> The threshold is read from the residual tail of the very rows the model was just fitted on, and residuals one week ahead are wider: in four compartments, next week's 1% level lies beyond the largest score of the training window. The fix follows from the mechanism — take each week's threshold from the previous four weeks' <em>out-of-sample</em> scores.</p>
       </div>
       <figure>
         <div class="fig-frame"><img src="img/fig12_weekly_deployment.png" alt="Weekly false-alarm rate over the season on a log scale: never refitted climbs to 60 percent in May; weekly refit with training-tail threshold mostly stays between 1 and 15 percent; with out-of-sample threshold it stays mostly below 2 percent, rising to 5 percent in mid-May." loading="lazy" width="1374" height="580"></div>
-        <figcaption>The recommended detector week by week (median over compartments). The remaining excess sits in the weeks when growers changed strategy (early March, May).</figcaption>
+        <figcaption>The recommended detector week by week (median over compartments). The remaining excess sits in the weeks when growers changed strategy (early March, May) — the drift finding again.</figcaption>
       </figure>
       <div class="callout"><p><strong>Headline.</strong> Refitted every week on the last four weeks and alarmed against a threshold from past out-of-sample scores, the context-residual MEWMA is near nominal on the test weeks (1.7% at 1%) and keeps its breadth. It still alarms 2.7% over the season (about three notifications a week), and one abnormal week can inflate its threshold a hundred-fold — enough, in one compartment, to hide the four real faults that followed. The context regression is the robust alternative (0.6%, all four faults caught).</p></div>
     </section>
 
     <section id="learned" class="section container">
-      <h2 class="section-title mono"><span class="accent">06.</span> What I take from it</h2>
+      <h2 class="section-title mono"><span class="accent">10.</span> What I take from it</h2>
       <ol class="takeaways prose">
+        <li><strong>Read the data before modelling it.</strong> Eight exploratory steps decided the question, the split, the unit of modelling and the uncertainty method — and predicted most of the method outcomes before any method ran.</li>
         <li><strong>"Normal" is conditional.</strong> The information is in the climate <em>given</em> its exogenous context; most of the work is choosing that context and excluding the variables that react to the anomaly itself.</li>
         <li><strong>Calibrate on the statistic's own tail.</strong> Gaussian limits — χ², F, the textbook MEWMA covariance (off by 10³–10⁵ here) — fail on real residuals.</li>
         <li><strong>Detectors specialise</strong>, and an evaluation must be able to tell a change detector from a state detector — hence the interior check.</li>
         <li><strong>White-box was not a handicap.</strong> Interpretable models matched or beat the black-box benchmarks on every anomaly type.</li>
-        <li><strong>Interpolation is not extrapolation.</strong> The models that win within a season are the most specific to it.</li>
         <li><strong>A threshold is part of the model.</strong> Refitting fixes the model, not its calibration; only a threshold estimated out of sample holds in deployment — and that estimator must itself be robust.</li>
       </ol>
     </section>
 
     <section id="caveats" class="section container">
-      <h2 class="section-title mono"><span class="accent">07.</span> Caveats, stated up front</h2>
+      <h2 class="section-title mono"><span class="accent">11.</span> Caveats, stated up front</h2>
       <div class="prose">
         <ul>
           <li><strong>One season, one crop.</strong> Six compartments of one tomato season; the anomalies are mostly synthetic; the seven real faults are all in one compartment.</li>
@@ -238,7 +342,7 @@
     </section>
 
     <section id="next" class="section container">
-      <h2 class="section-title mono"><span class="accent">08.</span> Next, and stack</h2>
+      <h2 class="section-title mono"><span class="accent">12.</span> Next, and stack</h2>
       <div class="prose">
         <p><strong>Next:</strong> a confirmatory test on unseen data — freeze the deployment setting in a git tag, write the predictions down, then evaluate once on another edition of the challenge (2018, cucumber, same facility) — with a robust out-of-sample threshold tested there, not here.</p>
       </div>
