@@ -83,7 +83,16 @@ const content = {
     languages: ["Thai · native", "French · bilingual", "English · bilingual"],
     "projects.caseStudy": "Case study →",
     "projects.code": "Code",
+    "projects.pypi": "PyPI",
     projects: [
+      {
+        title: "reliability-lab: how far can you trust an LLM judge?",
+        meta: "Open-source Python library · 2026",
+        summary: "Krippendorff's alpha already has Python implementations; this library adds the study design around it, for LLM judges and human annotators alike. Every rating carries an explicit status (abstention, parse or provider error), disagreement is reported white-box, bootstrap intervals name their resampling scheme and were checked by simulation in 26 scenarios, two judge configurations are compared with a paired interval, and group-safe splits keep reliability measured on units the tuning never saw.",
+        tags: ["Krippendorff's alpha", "Inter-rater reliability", "LLM-as-a-judge", "Bootstrap", "Simulation", "Python package"],
+        repo: "https://github.com/Sathapana/reliability-lab",
+        pypi: "https://pypi.org/project/reliability-lab/"
+      },
       {
         title: "Hidden anomalies in a greenhouse climate",
         meta: "Personal research project · 2026",
@@ -186,7 +195,16 @@ const content = {
     languages: ["Thaï · langue maternelle", "Français · bilingue", "Anglais · bilingue"],
     "projects.caseStudy": "Étude de cas (en anglais) →",
     "projects.code": "Code",
+    "projects.pypi": "PyPI",
     projects: [
+      {
+        title: "reliability-lab : peut-on se fier à un juge LLM ?",
+        meta: "Bibliothèque Python open source · 2026",
+        summary: "L'alpha de Krippendorff existe déjà en Python ; cette bibliothèque ajoute le protocole d'étude autour du coefficient, pour les juges LLM comme pour les annotateurs humains. Chaque annotation porte un statut explicite (abstention, erreur de parsing ou d'API), le désaccord est détaillé en « boîte blanche », les intervalles bootstrap nomment leur schéma de rééchantillonnage et ont été vérifiés par simulation sur 26 scénarios, deux configurations de juge se comparent avec un intervalle apparié, et des découpages respectant les groupes mesurent la fiabilité sur des unités jamais vues pendant le réglage.",
+        tags: ["Alpha de Krippendorff", "Fiabilité inter-annotateurs", "LLM-as-a-judge", "Bootstrap", "Simulation", "Package Python"],
+        repo: "https://github.com/Sathapana/reliability-lab",
+        pypi: "https://pypi.org/project/reliability-lab/"
+      },
       {
         title: "Anomalies cachées dans le climat d'une serre",
         meta: "Projet de recherche personnel · 2026",
@@ -247,24 +265,29 @@ function renderSkills(t) {
   }));
 }
 
+function link(text, href, external) {
+  const a = el("a", "", text);
+  a.href = href;
+  if (external) {
+    a.target = "_blank";
+    a.rel = "noopener";
+  }
+  return a;
+}
+
+// A project without a case study page (`href`) links its title to the repository instead.
 function renderProjects(t) {
   const list = document.getElementById("projects-list");
   list.replaceChildren(...t.projects.map(p => {
     const card = el("article", "card project-card");
     const title = el("h3", "project-title");
-    const link = el("a", "", p.title);
-    link.href = p.href;
-    title.append(link);
+    title.append(p.href ? link(p.title, p.href) : link(p.title, p.repo, true));
     const chips = el("ul", "chips");
     p.tags.forEach(tag => chips.append(el("li", "chip", tag)));
     const links = el("p", "project-links mono");
-    const study = el("a", "", t["projects.caseStudy"]);
-    study.href = p.href;
-    const repo = el("a", "", t["projects.code"]);
-    repo.href = p.repo;
-    repo.target = "_blank";
-    repo.rel = "noopener";
-    links.append(study, repo);
+    if (p.href) links.append(link(t["projects.caseStudy"], p.href));
+    links.append(link(t["projects.code"], p.repo, true));
+    if (p.pypi) links.append(link(t["projects.pypi"], p.pypi, true));
     card.append(title, el("p", "project-meta mono", p.meta), el("p", "project-summary", p.summary), chips, links);
     return card;
   }));
