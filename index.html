@@ -13,6 +13,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sathapana Chawananon</title>
   <meta name="description" content="Sathapana Chawananon: Data Scientist, PhD in Physical Chemistry. Interpretable ML, LLM agents, Green AI. Paris, France.">
+  <link rel="canonical" href="https://sathapana.github.io/">
+  <link rel="alternate" hreflang="en" href="https://sathapana.github.io/">
+  <link rel="alternate" hreflang="fr" href="https://sathapana.github.io/fr/">
+  <link rel="alternate" hreflang="x-default" href="https://sathapana.github.io/">
+  <meta property="og:type" content="profile">
+  <meta property="og:site_name" content="Sathapana Chawananon">
+  <meta property="og:title" content="Sathapana Chawananon · Data Scientist">
+  <meta property="og:description" content="Sathapana Chawananon: Data Scientist, PhD in Physical Chemistry. Interpretable ML, LLM agents, Green AI. Paris, France.">
+  <meta property="og:url" content="https://sathapana.github.io/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Sathapana Chawananon",
+    "jobTitle": "Data Scientist",
+    "url": "https://sathapana.github.io/",
+    "email": "mailto:sathapana.chawananon@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Paris", "addressRegion": "Île-de-France", "addressCountry": "FR" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Sorbonne University" },
+    "knowsLanguage": ["th", "fr", "en"],
+    "knowsAbout": ["Interpretable machine learning", "LLM agents", "Green AI", "Anomaly detection", "Survival analysis", "Uncertainty quantification", "High-resolution spectroscopy"],
+    "sameAs": ["https://www.linkedin.com/in/sathapana-chawananon", "https://github.com/Sathapana"]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -20,6 +47,11 @@
   <script>
     // Apply the saved theme before first paint to avoid a flash.
     try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    // Send French readers (saved choice, or a French browser with no choice yet) to the French page.
+    try {
+      var l = localStorage.getItem("lang");
+      if (l === "fr" || (!l && (navigator.language || "").toLowerCase().startsWith("fr"))) location.replace("fr/" + location.hash);
+    } catch (e) {}
   </script>
 </head>
 <body>
@@ -27,15 +59,15 @@
     <nav class="nav container">
       <a class="brand mono" href="#top">sath<span class="accent">@</span>paris<span class="dim">:~$</span></a>
       <ul class="nav-links">
-        <li><a href="#about" data-i18n="nav.about">About</a></li>
-        <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
-        <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
-        <li><a href="#skills" data-i18n="nav.skills">Skills</a></li>
-        <li><a href="#education" data-i18n="nav.education">Education</a></li>
-        <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
       <div class="toggles">
-        <button class="toggle mono" id="lang-toggle" type="button" aria-label="Switch language">FR</button>
+        <a class="toggle mono" id="lang-toggle" href="fr/" hreflang="fr" lang="fr" aria-label="Passer en français">FR</a>
         <button class="toggle" id="theme-toggle" type="button" aria-label="Toggle colour theme">
           <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
           <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -48,19 +80,19 @@
     <section class="hero container">
       <p class="prompt mono"><span class="accent">$</span> whoami</p>
       <h1>Sathapana Chawananon</h1>
-      <p class="headline mono" data-i18n="hero.headline">Data Scientist | PhD in Physical Chemistry | Interpretable ML, LLM agents, Green AI</p>
-      <p class="pitch" data-i18n="hero.pitch">Physics-based models on noisy data, now applied to machine learning: interpretable models, calibrated predictions, explainable systems.</p>
-      <p class="location mono"><span class="dim">#</span> <span data-i18n="hero.location">Paris, Île-de-France, France</span></p>
+      <p class="headline mono">Data Scientist | PhD in Physical Chemistry | Interpretable ML, LLM agents, Green AI</p>
+      <p class="pitch">Years of fitting physics-based models to large, noisy datasets, now applied to machine learning: interpretable models, calibrated predictions, explainable systems.</p>
+      <p class="location mono"><span class="dim">#</span> <span>Paris, Île-de-France, France</span></p>
       <div class="cta">
-        <a class="btn btn-primary" href="mailto:sathapana.chawananon@gmail.com" data-i18n="cta.email">Email me</a>
+        <a class="btn btn-primary" href="mailto:sathapana.chawananon@gmail.com">Email me</a>
         <a class="btn" href="https://www.linkedin.com/in/sathapana-chawananon" target="_blank" rel="noopener">LinkedIn</a>
         <a class="btn" href="https://github.com/Sathapana" target="_blank" rel="noopener">GitHub</a>
       </div>
       <a class="featured card" href="projects/greenhouse-anomaly-detection/">
-        <span class="featured-label mono" data-i18n="featured.label">Latest case study</span>
-        <span class="featured-title" data-i18n="featured.title">Hidden anomalies in a greenhouse climate</span>
-        <span class="featured-desc" data-i18n="featured.desc">Multivariate anomaly detection on greenhouse climate data: a white-box detector that explains every alarm, checked on past data only before calling it deployable.</span>
-        <span class="featured-more mono" data-i18n="featured.more">Read the case study →</span>
+        <span class="featured-label mono">Latest case study</span>
+        <span class="featured-title">Hidden anomalies in a greenhouse climate</span>
+        <span class="featured-desc">Multivariate anomaly detection on greenhouse climate data: a white-box detector that explains every alarm, checked on past data only before calling it deployable.</span>
+        <span class="featured-more mono">Read the case study →</span>
       </a>
       <svg class="spectrum" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0 70 L60 70 L66 40 L72 70 L130 70 L134 62 L138 70 L190 70 L196 18 L202 70 L250 70 L254 55 L258 70 L320 70 L325 30 L330 70 L380 70 L383 60 L386 70 L440 70 L446 8 L452 70 L500 70 L504 50 L508 70 L560 70 L563 64 L566 70 L600 70"/>
@@ -68,35 +100,230 @@
     </section>
 
     <section id="about" class="section container">
-      <h2 class="section-title mono"><span class="accent">01.</span> <span data-i18n="nav.about">About</span></h2>
-      <p class="about-text" data-i18n="about.text"></p>
+      <h2 class="section-title mono"><span class="accent">01.</span> <span>About</span></h2>
+      <p class="about-text">Data scientist with a background in quantitative science. For several years I built physics-based models fitted to large, noisy measurement datasets, where every parameter had to be justified and every uncertainty quantified. I bring the same standard to machine learning: interpretable models, calibrated predictions and explainable systems.</p>
     </section>
 
+    <!-- A project without a case study page links its title to the repository instead. -->
     <section id="projects" class="section container">
-      <h2 class="section-title mono"><span class="accent">02.</span> <span data-i18n="nav.projects">Projects</span></h2>
-      <div class="grid grid-2" id="projects-list"></div>
+      <h2 class="section-title mono"><span class="accent">02.</span> <span>Projects</span></h2>
+      <div class="grid grid-2" id="projects-list">
+        <article class="card project-card">
+          <h3 class="project-title"><a href="https://github.com/Sathapana/reliability-lab" target="_blank" rel="noopener">reliability-lab: how far can you trust an LLM judge?</a></h3>
+          <p class="project-meta mono">Open-source Python library · 2026</p>
+          <p class="project-summary">Krippendorff's alpha already has Python implementations; this library adds the study design around it, for LLM judges and human annotators alike. Every rating carries an explicit status (abstention, parse or provider error), disagreement is reported white-box, bootstrap intervals name their resampling scheme and were checked by simulation in 26 scenarios, two judge configurations are compared with a paired interval, and group-safe splits keep reliability measured on units the tuning never saw.</p>
+          <ul class="chips">
+            <li class="chip">Krippendorff's alpha</li>
+            <li class="chip">Inter-rater reliability</li>
+            <li class="chip">LLM-as-a-judge</li>
+            <li class="chip">Bootstrap</li>
+            <li class="chip">Simulation</li>
+            <li class="chip">Python package</li>
+          </ul>
+          <p class="project-links mono">
+            <a href="https://github.com/Sathapana/reliability-lab" target="_blank" rel="noopener">Code</a>
+            <a href="https://pypi.org/project/reliability-lab/" target="_blank" rel="noopener">PyPI</a>
+          </p>
+        </article>
+        <article class="card project-card">
+          <h3 class="project-title"><a href="projects/greenhouse-anomaly-detection/">Hidden anomalies in a greenhouse climate</a></h3>
+          <p class="project-meta mono">Personal research project · 2026</p>
+          <p class="project-summary">Temperature, humidity and CO₂ can each look normal while their combination is impossible. A white-box study of 15 multivariate detectors on six greenhouse compartments, from the Mahalanobis distance to a control chart on context residuals: a frozen protocol, every alarm explained per variable, and a deployment check on past data only.</p>
+          <ul class="chips">
+            <li class="chip">Anomaly detection</li>
+            <li class="chip">Mahalanobis</li>
+            <li class="chip">MEWMA</li>
+            <li class="chip">Calibration</li>
+            <li class="chip">Explainability</li>
+            <li class="chip">Time series</li>
+          </ul>
+          <p class="project-links mono">
+            <a href="projects/greenhouse-anomaly-detection/">Case study →</a>
+            <a href="https://github.com/Sathapana/Greenhouse_Plant_Growth" target="_blank" rel="noopener">Code</a>
+          </p>
+        </article>
+        <article class="card project-card">
+          <h3 class="project-title"><a href="projects/penny-stock-survival/">Crash hazard in US penny stocks</a></h3>
+          <p class="project-meta mono">Personal research project · 2026</p>
+          <p class="project-summary">For a volatile US small cap on a given day, what is the probability of a crash within 20 trading days, and does anything predict it better than a volatility forecast? A pre-registered survival study on 590,000 stock-days, with time-ordered validation and a run-once holdout.</p>
+          <ul class="chips">
+            <li class="chip">Survival analysis</li>
+            <li class="chip">Cox PH</li>
+            <li class="chip">Discrete-time hazard</li>
+            <li class="chip">XGBoost</li>
+            <li class="chip">Calibration</li>
+            <li class="chip">Pre-registration</li>
+          </ul>
+          <p class="project-links mono">
+            <a href="projects/penny-stock-survival/">Case study →</a>
+            <a href="https://github.com/Sathapana/PennyStock_survival" target="_blank" rel="noopener">Code</a>
+          </p>
+        </article>
+      </div>
     </section>
 
     <section id="experience" class="section container">
-      <h2 class="section-title mono"><span class="accent">03.</span> <span data-i18n="nav.experience">Experience</span></h2>
-      <ol class="timeline" id="experience-list"></ol>
+      <h2 class="section-title mono"><span class="accent">03.</span> <span>Experience</span></h2>
+      <ol class="timeline" id="experience-list">
+        <li class="current">
+          <article class="card">
+            <div class="job-head">
+              <h3 class="job-title">AI Developer (work-study)</h3>
+              <span class="job-meta mono">July 2025 – present</span>
+            </div>
+            <p class="job-org">DILA, French Directorate of Legal and Administrative Information<span class="job-place"> · Paris</span></p>
+            <ul>
+              <li>Co-developing an LLM-based agentic retrieval tool for public legal information.</li>
+              <li>Built a tracing layer measuring the energy use and carbon emissions of each LLM call (LangChain, EcoLogits).</li>
+            </ul>
+          </article>
+        </li>
+        <li>
+          <article class="card">
+            <div class="job-head">
+              <h3 class="job-title">Postdoctoral Researcher, quantitative spectroscopy and modelling</h3>
+              <span class="job-meta mono">November 2023 – September 2024</span>
+            </div>
+            <p class="job-org">CNRS<span class="job-place"> · Orsay</span></p>
+            <ul>
+              <li>Built physics-based models of molecular spectra, fitted by nonlinear least squares to large sets of measured transitions, with physically interpretable parameters.</li>
+              <li>Processed high-resolution infrared data from the SOLEIL synchrotron: baseline correction, peak assignment, uncertainty estimation.</li>
+              <li>Co-developed a global fitting approach combining several data sources (infrared, far-infrared, millimetre-wave) into a single model.</li>
+            </ul>
+          </article>
+        </li>
+        <li>
+          <article class="card">
+            <div class="job-head">
+              <h3 class="job-title">PhD Researcher, spectroscopy and data modelling</h3>
+              <span class="job-meta mono">October 2020 – October 2023</span>
+            </div>
+            <p class="job-org">MONARIS Laboratory, Sorbonne University<span class="job-place"> · Paris</span></p>
+            <ul>
+              <li>Designed and ran measurement campaigns (laser and synchrotron), producing large high-resolution spectral datasets.</li>
+              <li>Validated models by comparing experimental data with quantum-chemistry calculations.</li>
+              <li>Spectral analysis of polycyclic aromatic hydrocarbons (PAHs), their nitrogen-containing derivatives (PANHs) and furans.</li>
+            </ul>
+          </article>
+        </li>
+        <li>
+          <article class="card">
+            <div class="job-head">
+              <h3 class="job-title">Earlier research experience</h3>
+              <span class="job-meta mono">2017 – 2019</span>
+            </div>
+            <p class="job-org">Vancouver · Warsaw · Copenhagen</p>
+            <ul>
+              <li>University of British Columbia, Vancouver (8 months): DFT (density functional theory) modelling of a reaction mechanism.</li>
+              <li>University of Warsaw (2 months): molecular dynamics of receptor-ligand binding, applied to drug discovery.</li>
+              <li>University of Copenhagen (4 months): UV image analysis of drug dissolution kinetics.</li>
+            </ul>
+          </article>
+        </li>
+      </ol>
     </section>
 
     <section id="skills" class="section container">
-      <h2 class="section-title mono"><span class="accent">04.</span> <span data-i18n="nav.skills">Skills</span></h2>
-      <div class="grid" id="skills-grid"></div>
+      <h2 class="section-title mono"><span class="accent">04.</span> <span>Skills</span></h2>
+      <div class="grid" id="skills-grid">
+        <article class="card">
+          <h3 class="mono">Languages &amp; tools</h3>
+          <ul class="chips">
+            <li class="chip">Python</li>
+            <li class="chip">Git</li>
+            <li class="chip">Jupyter</li>
+            <li class="chip">Regex</li>
+            <li class="chip">BeautifulSoup</li>
+            <li class="chip">SQL</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3 class="mono">Machine learning &amp; statistics</h3>
+          <ul class="chips">
+            <li class="chip">scikit-learn</li>
+            <li class="chip">XGBoost</li>
+            <li class="chip">Nonlinear least squares</li>
+            <li class="chip">Uncertainty quantification</li>
+            <li class="chip">Calibration</li>
+            <li class="chip">Interpretability</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3 class="mono">Deep learning</h3>
+          <ul class="chips">
+            <li class="chip">Keras</li>
+            <li class="chip">PyTorch</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3 class="mono">LLM &amp; generative AI</h3>
+          <ul class="chips">
+            <li class="chip">LangChain</li>
+            <li class="chip">Mistral</li>
+            <li class="chip">RAG</li>
+            <li class="chip">Agents</li>
+            <li class="chip">EcoLogits</li>
+            <li class="chip">Environmental impact measurement</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3 class="mono">Deployment &amp; observability</h3>
+          <ul class="chips">
+            <li class="chip">FastAPI</li>
+            <li class="chip">Langfuse</li>
+            <li class="chip">OpenTelemetry</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3 class="mono">Science</h3>
+          <ul class="chips">
+            <li class="chip">High-resolution spectroscopy</li>
+            <li class="chip">Quantum chemistry</li>
+            <li class="chip">DFT</li>
+            <li class="chip">Molecular dynamics</li>
+          </ul>
+        </article>
+      </div>
     </section>
 
     <section id="education" class="section container">
-      <h2 class="section-title mono"><span class="accent">05.</span> <span data-i18n="nav.education">Education</span></h2>
-      <div class="grid grid-2" id="education-list"></div>
-      <h3 class="subtitle mono" data-i18n="languages.title">Languages</h3>
-      <ul class="chips" id="languages-list"></ul>
+      <h2 class="section-title mono"><span class="accent">05.</span> <span>Education</span></h2>
+      <div class="grid grid-2" id="education-list">
+        <article class="card">
+          <h3 class="edu-title">Data Scientist, RNCP Level 7 certification</h3>
+          <p class="edu-meta">Loira (formerly DataScientest) · <span class="mono">2025 – 2027</span></p>
+          <p class="edu-meta">French Master's-level qualification</p>
+          <span class="badge mono">in progress</span>
+        </article>
+        <article class="card">
+          <h3 class="edu-title">PhD in Physical Chemistry</h3>
+          <p class="edu-meta">Sorbonne University · <span class="mono">2023</span></p>
+        </article>
+        <article class="card">
+          <h3 class="edu-title">MSc in Chemistry</h3>
+          <p class="edu-meta">Sorbonne University · <span class="mono">2020</span></p>
+        </article>
+        <article class="card">
+          <h3 class="edu-title">BSc in Chemistry</h3>
+          <p class="edu-meta">Pierre and Marie Curie University · <span class="mono">2018</span></p>
+        </article>
+        <article class="card">
+          <h3 class="edu-title">DUT in Chemistry</h3>
+          <p class="edu-meta">IUT Montpellier-Sète · <span class="mono">2017</span></p>
+          <p class="edu-meta">2-year technical degree</p>
+        </article>
+      </div>
+      <h3 class="subtitle mono">Languages</h3>
+      <ul class="chips" id="languages-list">
+        <li class="chip">Thai · native</li>
+        <li class="chip">French · bilingual</li>
+        <li class="chip">English · bilingual</li>
+      </ul>
     </section>
 
     <section id="contact" class="section container contact">
-      <h2 class="section-title mono"><span class="accent">06.</span> <span data-i18n="nav.contact">Contact</span></h2>
-      <p class="contact-text" data-i18n="contact.text"></p>
+      <h2 class="section-title mono"><span class="accent">06.</span> <span>Contact</span></h2>
+      <p class="contact-text">Open to Data Scientist positions (permanent or fixed-term) in Paris / Île-de-France, in pharma, materials, energy or environment.</p>
       <div class="cta">
         <a class="btn btn-primary mono" href="mailto:sathapana.chawananon@gmail.com">sathapana.chawananon@gmail.com</a>
         <a class="btn" href="https://www.linkedin.com/in/sathapana-chawananon" target="_blank" rel="noopener">LinkedIn</a>
@@ -106,7 +333,7 @@
   </main>
 
   <footer class="footer container mono">
-    <span>© <span id="year"></span> Sathapana Chawananon</span>
+    <span>© <span id="year">2026</span> Sathapana Chawananon</span>
   </footer>
 
   <script src="assets/js/main.js"></script>

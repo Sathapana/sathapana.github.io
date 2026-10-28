@@ -118,7 +118,7 @@ a:hover { text-decoration: underline; }
   font-size: 13px;
   cursor: pointer;
 }
-.toggle:hover { border-color: var(--accent); }
+.toggle:hover { border-color: var(--accent); text-decoration: none; }
 .toggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 
 .icon-sun { display: none; }
