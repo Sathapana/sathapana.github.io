@@ -65,6 +65,14 @@
 
     <section id="results" class="section container">
       <h2 class="section-title mono"><span class="accent">01.</span> Answer in brief</h2>
+      <dl class="psi card case-psi">
+        <dt class="mono">Problem</dt>
+        <dd>For a volatile US small cap on a given day, what is the probability of a crash within 20 trading days, and does anything predict it better than a volatility forecast?</dd>
+        <dt class="mono">Solution</dt>
+        <dd>A pre-registered survival study on 590,000 stock-days: a discrete-time hazard on 22 frozen features against a volatility-forecast baseline, with time-ordered validation and a holdout run once.</dd>
+        <dt class="mono">Impact</dt>
+        <dd>Skipping each day's 10% of stocks the model ranks riskiest cuts the average loss of the worst 5% of trades by <strong>3 points</strong> on the holdout. It reduces risk; it doesn't make money.</dd>
+      </dl>
       <div class="tiles">
         <article class="card tile">
           <span class="tile-label mono">E1 · volatility-scaled crash</span>

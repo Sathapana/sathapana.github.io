@@ -66,6 +66,14 @@
 
     <section id="results" class="section container">
       <h2 class="section-title mono"><span class="accent">01.</span> Answer in brief</h2>
+      <dl class="psi card case-psi">
+        <dt class="mono">Problem</dt>
+        <dd>A sensor or control fault can keep temperature, humidity and CO₂ each inside its normal band while their combination is impossible, so per-variable alarms stay silent.</dd>
+        <dt class="mono">Solution</dt>
+        <dd>A white-box detector, a MEWMA control chart on context residuals, that checks the climate against what lamps, weather and set-points imply and names the variable behind each alarm. Chosen from 15 detectors under a frozen protocol on six greenhouse compartments.</dd>
+        <dt class="mono">Impact</dt>
+        <dd>Catches faults that per-sensor alarms miss: <strong>7 of 7</strong> real faults found, the responsible variable named in <strong>91%</strong> of alarms. Refitted weekly, false alarms stay at <strong>1.7%</strong> (target 1%), against <strong>41%</strong> for a model never refitted.</dd>
+      </dl>
       <div class="tiles">
         <article class="card tile">
           <span class="tile-label mono">H1 · hidden anomalies</span>

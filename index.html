@@ -111,7 +111,14 @@
         <article class="card project-card">
           <h3 class="project-title"><a href="https://github.com/Sathapana/reliability-lab" target="_blank" rel="noopener">reliability-lab: how far can you trust an LLM judge?</a></h3>
           <p class="project-meta mono">Open-source Python library · 2026</p>
-          <p class="project-summary">Krippendorff's alpha already has Python implementations; this library adds the study design around it, for LLM judges and human annotators alike. Every rating carries an explicit status (abstention, parse or provider error), disagreement is reported white-box, bootstrap intervals name their resampling scheme and were checked by simulation in 26 scenarios, two judge configurations are compared with a paired interval, and group-safe splits keep reliability measured on units the tuning never saw.</p>
+          <dl class="psi">
+            <dt class="mono">Problem</dt>
+            <dd>Krippendorff's alpha libraries return a single coefficient, but a reliability study of LLM judges or human annotators also needs failed ratings handled explicitly, honest intervals and leakage-safe splits.</dd>
+            <dt class="mono">Solution</dt>
+            <dd>An open-source Python library on PyPI that wraps alpha in the full study design: an explicit status for every rating, white-box disagreement, named bootstrap schemes, paired comparison of two judge configurations, group-safe splits.</dd>
+            <dt class="mono">Impact</dt>
+            <dd>Its 95% intervals hold up in simulation (<strong>93–95%</strong> coverage), where the classic KALPHA intervals are too narrow, covering only <strong>70–90%</strong> with three or more annotators. Tested on 3 OSes × 3 Python versions in CI.</dd>
+          </dl>
           <ul class="chips">
             <li class="chip">Krippendorff's alpha</li>
             <li class="chip">Inter-rater reliability</li>
@@ -128,7 +135,14 @@
         <article class="card project-card">
           <h3 class="project-title"><a href="projects/greenhouse-anomaly-detection/">Hidden anomalies in a greenhouse climate</a></h3>
           <p class="project-meta mono">Personal research project · 2026</p>
-          <p class="project-summary">Temperature, humidity and CO₂ can each look normal while their combination is impossible. A white-box study of 15 multivariate detectors on six greenhouse compartments, from the Mahalanobis distance to a control chart on context residuals: a frozen protocol, every alarm explained per variable, and a deployment check on past data only.</p>
+          <dl class="psi">
+            <dt class="mono">Problem</dt>
+            <dd>A sensor or control fault can keep temperature, humidity and CO₂ each inside its normal band while their combination is impossible, so per-variable alarms stay silent.</dd>
+            <dt class="mono">Solution</dt>
+            <dd>A white-box detector, a MEWMA control chart on context residuals, that checks the climate against what lamps, weather and set-points imply and names the variable behind each alarm. Chosen from 15 detectors under a frozen protocol on six greenhouse compartments.</dd>
+            <dt class="mono">Impact</dt>
+            <dd>Catches faults that per-sensor alarms miss: <strong>7 of 7</strong> real faults found, the responsible variable named in <strong>91%</strong> of alarms. Refitted weekly, false alarms stay at <strong>1.7%</strong> (target 1%), against <strong>41%</strong> for a model never refitted.</dd>
+          </dl>
           <ul class="chips">
             <li class="chip">Anomaly detection</li>
             <li class="chip">Mahalanobis</li>
@@ -145,7 +159,14 @@
         <article class="card project-card">
           <h3 class="project-title"><a href="projects/penny-stock-survival/">Crash hazard in US penny stocks</a></h3>
           <p class="project-meta mono">Personal research project · 2026</p>
-          <p class="project-summary">For a volatile US small cap on a given day, what is the probability of a crash within 20 trading days, and does anything predict it better than a volatility forecast? A pre-registered survival study on 590,000 stock-days, with time-ordered validation and a run-once holdout.</p>
+          <dl class="psi">
+            <dt class="mono">Problem</dt>
+            <dd>For a volatile US small cap on a given day, what is the probability of a crash within 20 trading days, and does anything predict it better than a volatility forecast?</dd>
+            <dt class="mono">Solution</dt>
+            <dd>A pre-registered survival study on 590,000 stock-days: a discrete-time hazard on 22 frozen features against a volatility-forecast baseline, with time-ordered validation and a holdout run once.</dd>
+            <dt class="mono">Impact</dt>
+            <dd>Skipping each day's 10% of stocks the model ranks riskiest cuts the average loss of the worst 5% of trades by <strong>3 points</strong> on the holdout. It reduces risk; it doesn't make money.</dd>
+          </dl>
           <ul class="chips">
             <li class="chip">Survival analysis</li>
             <li class="chip">Cox PH</li>
@@ -174,7 +195,7 @@
             <p class="job-org">DILA, French Directorate of Legal and Administrative Information<span class="job-place"> · Paris</span></p>
             <ul>
               <li>Co-developing an LLM-based agentic retrieval tool for public legal information.</li>
-              <li>Built a tracing layer measuring the energy use and carbon emissions of each LLM call (LangChain, EcoLogits).</li>
+              <li>Built a tracing layer measuring the energy use and carbon emissions of each LLM call (LangChain, EcoLogits), so the environmental cost of each model and prompt choice can be measured.</li>
             </ul>
           </article>
         </li>
@@ -225,57 +246,53 @@
 
     <section id="skills" class="section container">
       <h2 class="section-title mono"><span class="accent">04.</span> <span>Skills</span></h2>
-      <div class="grid" id="skills-grid">
+      <div class="grid grid-2" id="skills-grid">
         <article class="card">
-          <h3 class="mono">Languages &amp; tools</h3>
+          <h3 class="mono">Core data science &amp; modelling</h3>
           <ul class="chips">
-            <li class="chip">Python</li>
-            <li class="chip">Git</li>
-            <li class="chip">Jupyter</li>
-            <li class="chip">Regex</li>
-            <li class="chip">BeautifulSoup</li>
-            <li class="chip">SQL</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3 class="mono">Machine learning &amp; statistics</h3>
-          <ul class="chips">
+            <li class="chip">Interpretability (SHAP)</li>
+            <li class="chip">Anomaly detection</li>
+            <li class="chip">Time series</li>
+            <li class="chip">Survival analysis</li>
+            <li class="chip">Calibration</li>
+            <li class="chip">Uncertainty quantification</li>
+            <li class="chip">Bootstrap &amp; simulation</li>
+            <li class="chip">Nonlinear least squares</li>
             <li class="chip">scikit-learn</li>
             <li class="chip">XGBoost</li>
-            <li class="chip">Nonlinear least squares</li>
-            <li class="chip">Uncertainty quantification</li>
-            <li class="chip">Calibration</li>
-            <li class="chip">Interpretability</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3 class="mono">Deep learning</h3>
-          <ul class="chips">
-            <li class="chip">Keras</li>
             <li class="chip">PyTorch</li>
           </ul>
         </article>
         <article class="card">
-          <h3 class="mono">LLM &amp; generative AI</h3>
+          <h3 class="mono">LLM &amp; agentic systems</h3>
           <ul class="chips">
             <li class="chip">LangChain</li>
-            <li class="chip">Mistral</li>
+            <li class="chip">LangGraph</li>
             <li class="chip">RAG</li>
             <li class="chip">Agents</li>
-            <li class="chip">EcoLogits</li>
-            <li class="chip">Environmental impact measurement</li>
+            <li class="chip">Tool-calling</li>
+            <li class="chip">Mistral</li>
+            <li class="chip">LLM-as-a-judge evaluation</li>
+            <li class="chip">Observability (Langfuse, OpenTelemetry)</li>
+            <li class="chip">Green AI (EcoLogits, carbon tracking)</li>
           </ul>
         </article>
         <article class="card">
-          <h3 class="mono">Deployment &amp; observability</h3>
+          <h3 class="mono">Engineering &amp; infrastructure</h3>
           <ul class="chips">
+            <li class="chip">Python</li>
+            <li class="chip">SQL</li>
             <li class="chip">FastAPI</li>
-            <li class="chip">Langfuse</li>
-            <li class="chip">OpenTelemetry</li>
+            <li class="chip">Git</li>
+            <li class="chip">CI/CD (GitHub Actions)</li>
+            <li class="chip">pytest</li>
+            <li class="chip">uv</li>
+            <li class="chip">PyPI packaging</li>
+            <li class="chip">Web scraping (BeautifulSoup)</li>
           </ul>
         </article>
         <article class="card">
-          <h3 class="mono">Science</h3>
+          <h3 class="mono">Scientific background</h3>
           <ul class="chips">
             <li class="chip">High-resolution spectroscopy</li>
             <li class="chip">Quantum chemistry</li>

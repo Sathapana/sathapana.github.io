@@ -106,7 +106,14 @@
         <article class="card project-card">
           <h3 class="project-title"><a href="https://github.com/Sathapana/reliability-lab" target="_blank" rel="noopener">reliability-lab : peut-on se fier à un juge LLM ?</a></h3>
           <p class="project-meta mono">Bibliothèque Python open source · 2026</p>
-          <p class="project-summary">L'alpha de Krippendorff existe déjà en Python ; cette bibliothèque ajoute le protocole d'étude autour du coefficient, pour les juges LLM comme pour les annotateurs humains. Chaque annotation porte un statut explicite (abstention, erreur de parsing ou d'API), le désaccord est détaillé en « boîte blanche », les intervalles bootstrap nomment leur schéma de rééchantillonnage et ont été vérifiés par simulation sur 26 scénarios, deux configurations de juge se comparent avec un intervalle apparié, et des découpages respectant les groupes mesurent la fiabilité sur des unités jamais vues pendant le réglage.</p>
+          <dl class="psi">
+            <dt class="mono">Problème</dt>
+            <dd>Les bibliothèques d'alpha de Krippendorff renvoient un seul coefficient, alors qu'une étude de fiabilité de juges LLM ou d'annotateurs humains doit aussi traiter explicitement les annotations en échec, fournir des intervalles honnêtes et des découpages sans fuite.</dd>
+            <dt class="mono">Solution</dt>
+            <dd>Une bibliothèque Python open source publiée sur PyPI, qui intègre l'alpha dans tout le protocole d'étude : un statut explicite pour chaque annotation, le désaccord en « boîte blanche », des schémas de bootstrap nommés, la comparaison appariée de deux configurations de juge, des découpages respectant les groupes.</dd>
+            <dt class="mono">Impact</dt>
+            <dd>Ses intervalles à 95 % tiennent en simulation (couverture de <strong>93–95 %</strong>), là où les intervalles KALPHA classiques sont trop étroits et ne couvrent que <strong>70–90 %</strong> dès trois annotateurs. Testée sur 3 OS × 3 versions de Python en intégration continue.</dd>
+          </dl>
           <ul class="chips">
             <li class="chip">Alpha de Krippendorff</li>
             <li class="chip">Fiabilité inter-annotateurs</li>
@@ -123,7 +130,14 @@
         <article class="card project-card">
           <h3 class="project-title"><a href="../projects/greenhouse-anomaly-detection/">Anomalies cachées dans le climat d'une serre</a></h3>
           <p class="project-meta mono">Projet de recherche personnel · 2026</p>
-          <p class="project-summary">Température, humidité et CO₂ peuvent chacun paraître normaux alors que leur combinaison est impossible. Une étude « boîte blanche » de 15 détecteurs multivariés sur six compartiments de serre, de la distance de Mahalanobis à une carte de contrôle sur résidus de contexte : un protocole figé, chaque alarme expliquée par variable et un test de déploiement sur données passées uniquement.</p>
+          <dl class="psi">
+            <dt class="mono">Problème</dt>
+            <dd>Une panne de capteur ou de régulation peut laisser température, humidité et CO₂ chacun dans sa plage normale alors que leur combinaison est impossible : les alarmes par variable restent muettes.</dd>
+            <dt class="mono">Solution</dt>
+            <dd>Un détecteur « boîte blanche », une carte de contrôle MEWMA sur résidus de contexte, qui confronte le climat à ce qu'impliquent lampes, météo et consignes, et désigne la variable responsable de chaque alarme. Retenu parmi 15 détecteurs, avec un protocole figé, sur six compartiments de serre.</dd>
+            <dt class="mono">Impact</dt>
+            <dd>Repère les pannes que les alarmes par capteur ne voient pas : <strong>7 pannes réelles sur 7</strong> détectées, la variable responsable désignée dans <strong>91 %</strong> des alarmes. Recalé chaque semaine, il reste à <strong>1,7 %</strong> de fausses alarmes (cible 1 %), contre <strong>41 %</strong> pour un modèle jamais recalé.</dd>
+          </dl>
           <ul class="chips">
             <li class="chip">Détection d'anomalies</li>
             <li class="chip">Mahalanobis</li>
@@ -140,7 +154,14 @@
         <article class="card project-card">
           <h3 class="project-title"><a href="../projects/penny-stock-survival/">Risque de krach des penny stocks américaines</a></h3>
           <p class="project-meta mono">Projet de recherche personnel · 2026</p>
-          <p class="project-summary">Pour une small cap américaine volatile, un jour donné, quelle est la probabilité d'un krach dans les 20 séances suivantes, et peut-on la prédire mieux qu'une prévision de volatilité ? Une étude de survie pré-enregistrée sur 590 000 jours-actions, avec validation chronologique et un test final exécuté une seule fois.</p>
+          <dl class="psi">
+            <dt class="mono">Problème</dt>
+            <dd>Pour une small cap américaine volatile, un jour donné, quelle est la probabilité d'un krach dans les 20 séances suivantes, et peut-on la prédire mieux qu'une prévision de volatilité ?</dd>
+            <dt class="mono">Solution</dt>
+            <dd>Une étude de survie pré-enregistrée sur 590 000 jours-actions : un modèle de hazard en temps discret sur 22 variables figées face à une référence fondée sur la prévision de volatilité, avec validation chronologique et un test final exécuté une seule fois.</dd>
+            <dt class="mono">Impact</dt>
+            <dd>Écarter chaque jour les 10 % d'actions que le modèle juge les plus risquées réduit de <strong>3 points</strong> la perte moyenne des 5 % de trades les plus perdants sur le test final. Cela réduit le risque, sans rapporter d'argent.</dd>
+          </dl>
           <ul class="chips">
             <li class="chip">Analyse de survie</li>
             <li class="chip">Cox PH</li>
@@ -169,7 +190,7 @@
             <p class="job-org">DILA, Direction de l'information légale et administrative<span class="job-place"> · Paris</span></p>
             <ul>
               <li>Co-développement d'un outil de recherche agentique fondé sur des LLM pour l'information juridique publique.</li>
-              <li>Conception d'une couche de traçage mesurant la consommation d'énergie et les émissions carbone de chaque appel LLM (LangChain, EcoLogits).</li>
+              <li>Conception d'une couche de traçage mesurant la consommation d'énergie et les émissions carbone de chaque appel LLM (LangChain, EcoLogits), pour rendre mesurable le coût environnemental de chaque choix de modèle et de prompt.</li>
             </ul>
           </article>
         </li>
@@ -220,57 +241,53 @@
 
     <section id="skills" class="section container">
       <h2 class="section-title mono"><span class="accent">04.</span> <span>Compétences</span></h2>
-      <div class="grid" id="skills-grid">
+      <div class="grid grid-2" id="skills-grid">
         <article class="card">
-          <h3 class="mono">Langages et outils</h3>
+          <h3 class="mono">Data science et modélisation</h3>
           <ul class="chips">
-            <li class="chip">Python</li>
-            <li class="chip">Git</li>
-            <li class="chip">Jupyter</li>
-            <li class="chip">Regex</li>
-            <li class="chip">BeautifulSoup</li>
-            <li class="chip">SQL</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3 class="mono">Machine learning et statistiques</h3>
-          <ul class="chips">
+            <li class="chip">Interprétabilité (SHAP)</li>
+            <li class="chip">Détection d'anomalies</li>
+            <li class="chip">Séries temporelles</li>
+            <li class="chip">Analyse de survie</li>
+            <li class="chip">Calibration</li>
+            <li class="chip">Quantification des incertitudes</li>
+            <li class="chip">Bootstrap et simulation</li>
+            <li class="chip">Moindres carrés non linéaires</li>
             <li class="chip">scikit-learn</li>
             <li class="chip">XGBoost</li>
-            <li class="chip">Moindres carrés non linéaires</li>
-            <li class="chip">Quantification des incertitudes</li>
-            <li class="chip">Calibration</li>
-            <li class="chip">Interprétabilité</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3 class="mono">Deep learning</h3>
-          <ul class="chips">
-            <li class="chip">Keras</li>
             <li class="chip">PyTorch</li>
           </ul>
         </article>
         <article class="card">
-          <h3 class="mono">LLM et IA générative</h3>
+          <h3 class="mono">LLM et systèmes agentiques</h3>
           <ul class="chips">
             <li class="chip">LangChain</li>
-            <li class="chip">Mistral</li>
+            <li class="chip">LangGraph</li>
             <li class="chip">RAG</li>
             <li class="chip">Agents</li>
-            <li class="chip">EcoLogits</li>
-            <li class="chip">Mesure d'impact environnemental</li>
+            <li class="chip">Appel d'outils (tool calling)</li>
+            <li class="chip">Mistral</li>
+            <li class="chip">Évaluation LLM-as-a-judge</li>
+            <li class="chip">Observabilité (Langfuse, OpenTelemetry)</li>
+            <li class="chip">IA frugale (EcoLogits, suivi carbone)</li>
           </ul>
         </article>
         <article class="card">
-          <h3 class="mono">Industrialisation et observabilité</h3>
+          <h3 class="mono">Ingénierie et infrastructure</h3>
           <ul class="chips">
+            <li class="chip">Python</li>
+            <li class="chip">SQL</li>
             <li class="chip">FastAPI</li>
-            <li class="chip">Langfuse</li>
-            <li class="chip">OpenTelemetry</li>
+            <li class="chip">Git</li>
+            <li class="chip">CI/CD (GitHub Actions)</li>
+            <li class="chip">pytest</li>
+            <li class="chip">uv</li>
+            <li class="chip">Packaging PyPI</li>
+            <li class="chip">Web scraping (BeautifulSoup)</li>
           </ul>
         </article>
         <article class="card">
-          <h3 class="mono">Sciences</h3>
+          <h3 class="mono">Bagage scientifique</h3>
           <ul class="chips">
             <li class="chip">Spectroscopie haute résolution</li>
             <li class="chip">Chimie quantique</li>
