@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-58VS90ZMV5"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-58VS90ZMV5');
-  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sathapana Chawananon</title>
@@ -24,7 +16,11 @@
   <meta property="og:url" content="https://sathapana.github.io/">
   <meta property="og:locale" content="en_US">
   <meta property="og:locale:alternate" content="fr_FR">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://sathapana.github.io/assets/img/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sathapana Chawananon, Data Scientist">
+  <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -40,6 +36,8 @@
     "sameAs": ["https://www.linkedin.com/in/sathapana-chawananon", "https://github.com/Sathapana"]
   }
   </script>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -53,6 +51,7 @@
       if (l === "fr" || (!l && (navigator.language || "").toLowerCase().startsWith("fr"))) location.replace("fr/" + location.hash);
     } catch (e) {}
   </script>
+  <script src="assets/js/consent.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -89,7 +88,7 @@
         <a class="btn" href="https://github.com/Sathapana" target="_blank" rel="noopener">GitHub</a>
       </div>
       <a class="featured card" href="projects/greenhouse-anomaly-detection/">
-        <span class="featured-label mono">Latest case study</span>
+        <span class="featured-label mono">Featured case study</span>
         <span class="featured-title">Hidden anomalies in a greenhouse climate</span>
         <span class="featured-desc">Multivariate anomaly detection on greenhouse climate data: a white-box detector that explains every alarm, checked on past data only before calling it deployable.</span>
         <span class="featured-more mono">Read the case study →</span>
@@ -306,6 +305,7 @@
             <li class="chip">Python</li>
             <li class="chip">SQL</li>
             <li class="chip">FastAPI</li>
+            <li class="chip">Next.js</li>
             <li class="chip">Git</li>
             <li class="chip">CI/CD (GitHub Actions)</li>
             <li class="chip">pytest</li>

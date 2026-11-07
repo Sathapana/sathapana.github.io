@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found · Sathapana Chawananon</title>
+  <meta name="robots" content="noindex">
+  <!-- GitHub Pages serves this file for any missing path, so every URL here is root-absolute. -->
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script>
+    try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav container">
+      <a class="brand mono" href="/">sath<span class="accent">@</span>paris<span class="dim">:~$</span></a>
+    </nav>
+  </header>
+  <main class="hero container">
+    <p class="prompt mono"><span class="accent">$</span> cd <span id="path"></span></p>
+    <h1>404</h1>
+    <p class="headline mono">No such file or directory</p>
+    <p class="pitch">This page doesn't exist, or it has moved. <span lang="fr">Cette page n'existe pas ou a été déplacée.</span></p>
+    <div class="cta">
+      <a class="btn btn-primary" href="/">Portfolio (English)</a>
+      <a class="btn" href="/fr/" hreflang="fr" lang="fr">Portfolio (français)</a>
+    </div>
+  </main>
+  <script>document.getElementById("path").textContent = location.pathname;</script>
+</body>
+</html>
