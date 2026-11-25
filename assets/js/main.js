@@ -11,6 +11,17 @@ function currentTheme() {
   return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
 }
 
+// On phones the nav links scroll sideways in one row: keep the active one in view.
+function revealInRow(link) {
+  const row = link.closest(".nav-links");
+  if (row.scrollWidth <= row.clientWidth) return;
+  const r = row.getBoundingClientRect();
+  const l = link.getBoundingClientRect();
+  if (l.left >= r.left && l.right <= r.right - 24) return;
+  const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  row.scrollBy({ left: l.left - r.left - 16, behavior: smooth ? "smooth" : "auto" });
+}
+
 function initNavHighlight() {
   const links = [...document.querySelectorAll(".nav-links a")];
   const byId = new Map(links.map(a => [a.getAttribute("href").slice(1), a]));
@@ -19,7 +30,7 @@ function initNavHighlight() {
       if (!entry.isIntersecting) return;
       links.forEach(a => a.classList.remove("active"));
       const link = byId.get(entry.target.id);
-      if (link) link.classList.add("active");
+      if (link) { link.classList.add("active"); revealInRow(link); }
     });
   }, { rootMargin: "-40% 0px -55% 0px" });
   byId.forEach((_, id) => {

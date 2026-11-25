@@ -10,7 +10,10 @@
   <meta property="og:title" content="Penny Stock Crash Hazard">
   <meta property="og:description" content="A pre-registered survival study: for a volatile US small cap on a given day, what is the probability of a crash within 20 trading days, and does anything beat a volatility forecast? By Sathapana Chawananon.">
   <meta property="og:url" content="https://sathapana.github.io/projects/penny-stock-survival/">
-  <meta property="og:image" content="https://sathapana.github.io/assets/img/og-card.png">
+  <meta property="og:image" content="https://sathapana.github.io/projects/penny-stock-survival/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Case study: crash hazard in US penny stocks. 590k stock-days, 22 frozen features against a volatility baseline, 3 points less tail loss on the holdout.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://sathapana.github.io/projects/penny-stock-survival/">
   <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
@@ -126,7 +129,7 @@
     <section id="method" class="section container">
       <h2 class="section-title mono"><span class="accent">03.</span> Design: built to avoid fooling myself</h2>
       <figure>
-        <div class="fig-frame"><img src="img/fig_timeline.png" alt="Timeline of the four time-ordered splits: development 2016 to 2022 with walk-forward test years 2018 to 2022, validation 2023 to 2024, Test A 2025 to October 2026, and Test B forward from late October 2026." loading="lazy" width="1113" height="384"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig_timeline.png"><img src="img/fig_timeline.png" alt="Timeline of the four time-ordered splits: development 2016 to 2022 with walk-forward test years 2018 to 2022, validation 2023 to 2024, Test A 2025 to October 2026, and Test B forward from late October 2026." loading="lazy" width="1113" height="384"></a></div>
         <figcaption>Time-ordered splits, never random. Landmarks whose 20-bar window crosses a boundary are purged, with a 20-bar embargo. Validation and Test A were each run exactly once.</figcaption>
       </figure>
       <div class="prose">
@@ -158,11 +161,11 @@
     <section id="survival" class="section container">
       <h2 class="section-title mono"><span class="accent">04.</span> Results</h2>
       <figure>
-        <div class="fig-frame"><img src="img/fig_brier_vs_b2.png" alt="Dot-and-interval chart of each model's Brier score minus B2's, for E1 and E2, on development, validation and Test A. For E1 most intervals touch zero; for E2 the level-2 models and XGBoost sit clearly left of zero on validation and Test A." loading="lazy" width="1562" height="672"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig_brier_vs_b2.png"><img src="img/fig_brier_vs_b2.png" alt="Dot-and-interval chart of each model's Brier score minus B2's, for E1 and E2, on development, validation and Test A. For E1 most intervals touch zero; for E2 the level-2 models and XGBoost sit clearly left of zero on validation and Test A." loading="lazy" width="1562" height="672"></a></div>
         <figcaption>Brier score at 20 bars minus B2's (×1/1000); left of 0 is better than B2. For E2, the level-2 models and XGBoost are clearly better out of sample. For E1, gains are small and the selected Cox model's holdout CI touches 0.</figcaption>
       </figure>
       <figure>
-        <div class="fig-frame"><img src="img/fig_calibration_slopes.png" alt="Calibration slopes per model and period, with the 0.8 to 1.2 band of the decision rule shaded. For E1, B2 recalibrated and the stratified Cox fall below the band on validation and Test A; for E2 the selected models sit inside it." loading="lazy" width="1562" height="740"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig_calibration_slopes.png"><img src="img/fig_calibration_slopes.png" alt="Calibration slopes per model and period, with the 0.8 to 1.2 band of the decision rule shaded. For E1, B2 recalibrated and the stratified Cox fall below the band on validation and Test A; for E2 the selected models sit inside it." loading="lazy" width="1562" height="740"></a></div>
         <figcaption>Calibration slope (shaded: the [0.8, 1.2] band of the decision rule). The selected E1 model, a stratified Cox, falls below the band on validation (0.75) and the holdout (0.64): that is why E1 fails the rule.</figcaption>
       </figure>
 
@@ -181,17 +184,17 @@
       <p class="muted prose">B2's own Brier on Test A: 0.06098 (E1) and 0.21480 (E2). Uno's C on Test A, E1: B2 0.638, Cox 0.655, XGBoost 0.682. Observed E2 rate climbed from 24% (development) to 28% (validation) to 37% (Test A).</p>
 
       <figure>
-        <div class="fig-frame"><img src="img/fig_skill_decomposition.png" alt="Stacked bars of Brier skill over the constant Kaplan-Meier forecast, split into B2, level 2 and XGBoost layers. E1 totals 3.5 and 4.3 percent; E2 totals 13.3 and 21.4 percent, mostly from B2." loading="lazy" width="1218" height="480"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig_skill_decomposition.png"><img src="img/fig_skill_decomposition.png" alt="Stacked bars of Brier skill over the constant Kaplan-Meier forecast, split into B2, level 2 and XGBoost layers. E1 totals 3.5 and 4.3 percent; E2 totals 13.3 and 21.4 percent, mostly from B2." loading="lazy" width="1218" height="480"></a></div>
         <figcaption>Where the skill comes from. Most of it is the volatility forecast (blue). Features add a slice on top, and boosted trees add a bit more. E1 stays nearly unpredictable: 3.5–4.3% Brier skill in total.</figcaption>
       </figure>
 
       <h3 class="subtitle mono">What the features carry</h3>
       <figure>
-        <div class="fig-frame"><img src="img/fig_cox_hazard_ratios.png" alt="Hazard ratios per standard deviation for the 22 features of the stratified Cox model, for E1 and E2. Bollinger width and relative volume raise the hazard for both events; sigma strongly lowers it for E1 but raises it for E2." loading="lazy" width="1570" height="1062"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig_cox_hazard_ratios.png"><img src="img/fig_cox_hazard_ratios.png" alt="Hazard ratios per standard deviation for the 22 features of the stratified Cox model, for E1 and E2. Bollinger width and relative volume raise the hazard for both events; sigma strongly lowers it for E1 but raises it for E2." loading="lazy" width="1570" height="1062"></a></div>
         <figcaption>Stratified Cox hazard ratios per SD. Relative volume (<code>log_rvol</code>, ≈ 1.2 per SD) and Bollinger width raise the hazard for both events. σ has an <em>inverse</em> effect for E1 even within σ terciles: volatility mean-reverts, so a high trailing σ overstates the coming σ.</figcaption>
       </figure>
       <figure>
-        <div class="fig-frame"><img src="img/fig_xgb_shap.png" alt="Mean absolute SHAP contributions for the top 12 XGBoost inputs. For E1: sigma, k, distance to the 200-day average, the 10 over 60 day volatility ratio and market regime lead. For E2: k, sigma, distance to the 200-day average and Bollinger width lead." loading="lazy" width="1570" height="654"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig_xgb_shap.png"><img src="img/fig_xgb_shap.png" alt="Mean absolute SHAP contributions for the top 12 XGBoost inputs. For E1: sigma, k, distance to the 200-day average, the 10 over 60 day volatility ratio and market regime lead. For E2: k, sigma, distance to the 200-day average and Bollinger width lead." loading="lazy" width="1570" height="654"></a></div>
         <figcaption>XGBoost extension, mean |SHAP| (descriptive). Depth-3 trees won tuning for both events; deeper trees did worse, so the gain comes from low-order interactions and non-linearities.</figcaption>
       </figure>
     </section>
@@ -202,7 +205,7 @@
         <p>A hypothetical book takes one trade per landmark: buy at the next open, sell at the close 20 bars later, 3% round-trip cost. Rules: <strong>R0</strong> equal weight, <strong>R1</strong> inverse volatility, <strong>R2</strong> exclude the day's top decile of predicted risk, <strong>R3</strong> = R1 + R2. The metric is CVaR 5%, the mean of the worst 5% of trades, with paired month-block CIs.</p>
       </div>
       <figure>
-        <div class="fig-frame"><img src="img/fig_overlay_cvar.png" alt="Change in CVaR 5 percent for each exclusion rule on validation and Test A. Exclusions by the E1 Cox model or by B2 hover around zero; exclusions by the E2 hazard improve CVaR by about 3 points versus R1 and about 4 points versus R0." loading="lazy" width="1333" height="580"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig_overlay_cvar.png"><img src="img/fig_overlay_cvar.png" alt="Change in CVaR 5 percent for each exclusion rule on validation and Test A. Exclusions by the E1 Cox model or by B2 hover around zero; exclusions by the E2 hazard improve CVaR by about 3 points versus R1 and about 4 points versus R0." loading="lazy" width="1333" height="580"></a></div>
         <figcaption>Excluding by predicted E1 risk, the pre-registered primary rule, does nothing on either period. Excluding by predicted E2 risk cuts tail losses on both. That rule was chosen after validation and confirmed on the holdout.</figcaption>
       </figure>
       <div class="table-wrap">
