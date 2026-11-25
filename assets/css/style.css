@@ -302,8 +302,18 @@ h1 {
 
 /* Mobile */
 @media (max-width: 760px) {
+  html { scroll-padding-top: 100px; }
   .container { padding: 0 16px; }
-  .nav-links { display: none; }
+  /* Section links move to a second row that scrolls sideways; the fade hints at more links. */
+  .nav { flex-wrap: wrap; height: auto; gap: 0 16px; padding-top: 12px; }
+  .nav-links {
+    order: 3; flex: 0 0 100%; gap: 22px; margin: 0; padding: 8px 24px 10px 0;
+    overflow-x: auto; scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a { white-space: nowrap; }
   .toggles { margin-left: auto; }
   .hero { padding-top: 56px; }
   .grid, .grid-2 { grid-template-columns: 1fr; }

@@ -59,6 +59,18 @@ figure { margin: 8px 0 28px; }
   overflow: hidden;
 }
 .fig-frame img { display: block; width: 100%; height: auto; }
+/* Each figure links to its full-size PNG, so it can be zoomed (most are too dense to read on a phone). */
+.fig-zoom { display: block; position: relative; cursor: zoom-in; }
+.fig-zoom:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+@media (hover: none) {
+  .fig-zoom::after {
+    content: "tap to enlarge";
+    position: absolute; right: 0; bottom: 0;
+    padding: 2px 8px; border-radius: 4px;
+    background: rgba(27, 31, 36, 0.72); color: #fff;
+    font: 11px "JetBrains Mono", ui-monospace, Consolas, monospace;
+  }
+}
 figcaption { margin-top: 10px; font-size: 14px; color: var(--text-dim); max-width: 760px; }
 
 /* Tables scroll inside their wrapper, never the page. */

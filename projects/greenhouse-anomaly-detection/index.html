@@ -10,7 +10,10 @@
   <meta property="og:title" content="Greenhouse Anomaly Detection">
   <meta property="og:description" content="A white-box study of multivariate anomaly detection on greenhouse climate data: what the data revealed first, how each finding shaped the methods, and whether the winner holds up in deployment. By Sathapana Chawananon.">
   <meta property="og:url" content="https://sathapana.github.io/projects/greenhouse-anomaly-detection/">
-  <meta property="og:image" content="https://sathapana.github.io/assets/img/og-card.png">
+  <meta property="og:image" content="https://sathapana.github.io/projects/greenhouse-anomaly-detection/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Case study: hidden anomalies in a greenhouse climate. 7 of 7 real faults found, 91% of alarms traced to the right variable, 1.7% false alarms refitted weekly.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://sathapana.github.io/projects/greenhouse-anomaly-detection/">
   <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
@@ -104,7 +107,7 @@
     <section id="question" class="section container">
       <h2 class="section-title mono"><span class="accent">02.</span> The question</h2>
       <figure>
-        <div class="fig-frame" style="max-width: 560px;"><img src="img/fig01_hidden_anomaly.png" alt="Scatter of two correlated, standardised variables with a dashed square of per-variable 99 percent bands and a tilted 99 percent Mahalanobis ellipse; a red point lies inside the square but outside the ellipse." loading="lazy" width="840" height="650"></div>
+        <div class="fig-frame" style="max-width: 560px;"><a class="fig-zoom" href="img/fig01_hidden_anomaly.png"><img src="img/fig01_hidden_anomaly.png" alt="Scatter of two correlated, standardised variables with a dashed square of per-variable 99 percent bands and a tilted 99 percent Mahalanobis ellipse; a red point lies inside the square but outside the ellipse." loading="lazy" width="840" height="650"></a></div>
         <figcaption>Schematic (synthetic data, correlation −0.6). Each value of the red point is inside its own band; the combination is outside the joint 99% ellipse.</figcaption>
       </figure>
       <div class="prose">
@@ -122,7 +125,7 @@
         <p><strong>The first finding was a gap.</strong> The project was framed around temperature, humidity, light and airflow — but light and airflow are not measured indoors: there is only lamp status, a <em>computed</em> light value and vent openings, and the controller's humidity deficit is just a function of temperature and humidity. So the question changed: not "is any reading abnormal?" but <strong>"is the measured climate consistent with what lamps, set-points and weather imply?"</strong> Monitored: air temperature, humidity (logit scale, since it is bounded at 100%) and CO₂. Context: the lamp × sun regime, time of day, weather, the realised set-points.</p>
       </div>
       <figure>
-        <div class="fig-frame"><img src="img/fig02_data_week.png" alt="Four stacked panels over one week: bars for sun and lamp periods, then air temperature, relative humidity and CO2 time series with a strong daily cycle." loading="lazy" width="1380" height="807"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig02_data_week.png"><img src="img/fig02_data_week.png" alt="Four stacked panels over one week: bars for sun and lamp periods, then air temperature, relative humidity and CO2 time series with a strong daily cycle." loading="lazy" width="1380" height="807"></a></div>
         <figcaption>One week of the growers' compartment: the monitored climate (bottom three panels) and two pieces of its context (top). Lamps raise the air temperature by 1.5–2.1 °C within 30 minutes.</figcaption>
       </figure>
     </section>
@@ -135,7 +138,7 @@
 
       <h3 class="subtitle mono">A fault only a cross-check could see</h3>
       <figure>
-        <div class="fig-frame"><img src="img/figE1_crosscheck_fault.png" alt="Two panels for 8 January 2020: the logged air temperature of the growers' compartment climbs linearly to 34 degrees while the five other compartments stay near 23; the humidity deficit computed by the climate computer stays near zero while the same quantity recomputed from the logged values is several times higher." loading="lazy" width="1346" height="774"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/figE1_crosscheck_fault.png"><img src="img/figE1_crosscheck_fault.png" alt="Two panels for 8 January 2020: the logged air temperature of the growers' compartment climbs linearly to 34 degrees while the five other compartments stay near 23; the humidity deficit computed by the climate computer stays near zero while the same quantity recomputed from the logged values is several times higher." loading="lazy" width="1346" height="774"></a></div>
         <figcaption>The logged temperature climbs to 34 °C in January while heating and vents do not react; the climate computer's own humidity deficit contradicts the logged values for about 3.5 hours.</figcaption>
       </figure>
       <div class="prose">
@@ -145,7 +148,7 @@
 
       <h3 class="subtitle mono">"Normal" comes in regimes — and correlations flip sign</h3>
       <figure>
-        <div class="fig-frame"><img src="img/figE2_regimes.png" alt="Four scatter panels of CO2 against air temperature, one per regime (night, night with lamps, day, day with lamps), each with its 99 percent ellipse; the correlation is +0.41 at night and about −0.27 in the other three regimes, +0.10 pooled." loading="lazy" width="1850" height="494"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/figE2_regimes.png"><img src="img/figE2_regimes.png" alt="Four scatter panels of CO2 against air temperature, one per regime (night, night with lamps, day, day with lamps), each with its 99 percent ellipse; the correlation is +0.41 at night and about −0.27 in the other three regimes, +0.10 pooled." loading="lazy" width="1850" height="494"></a></div>
         <figcaption>Temperature vs CO₂ in the growers' compartment: +0.41 at night, −0.26 to −0.28 in the other regimes, +0.10 when pooled. One global ellipse averages incompatible shapes.</figcaption>
       </figure>
       <div class="prose">
@@ -155,7 +158,7 @@
 
       <h3 class="subtitle mono">The season drifts</h3>
       <figure>
-        <div class="fig-frame" style="max-width: 760px;"><img src="img/figE3_seasonal_drift.png" alt="Dot chart per compartment on a log scale: with a blocked split the per-variable bands alarm below 1 percent; with a chronological split, trained on winter and tested in late spring, they alarm 8 to 33 percent." loading="lazy" width="1082" height="593"></div>
+        <div class="fig-frame" style="max-width: 760px;"><a class="fig-zoom" href="img/figE3_seasonal_drift.png"><img src="img/figE3_seasonal_drift.png" alt="Dot chart per compartment on a log scale: with a blocked split the per-variable bands alarm below 1 percent; with a chronological split, trained on winter and tested in late spring, they alarm 8 to 33 percent." loading="lazy" width="1082" height="593"></a></div>
         <figcaption>Per-variable bands trained on winter and tested in late spring alarm 8–33% of the time at a nominal 1%; with a blocked split, below 1%.</figcaption>
       </figure>
       <div class="prose">
@@ -165,7 +168,7 @@
 
       <h3 class="subtitle mono">Most of the variance is the schedule; anomalies fade within hours</h3>
       <figure>
-        <div class="fig-frame"><img src="img/figE4_temporal_structure.png" alt="Left: stacked bars per compartment and variable splitting the variance into daily profile, slow level and anomaly; the daily profile dominates. Right: autocorrelation of the anomaly part falling below 0.1 within about three to four hours for every series." loading="lazy" width="1710" height="540"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/figE4_temporal_structure.png"><img src="img/figE4_temporal_structure.png" alt="Left: stacked bars per compartment and variable splitting the variance into daily profile, slow level and anomaly; the daily profile dominates. Right: autocorrelation of the anomaly part falling below 0.1 within about three to four hours for every series." loading="lazy" width="1710" height="540"></a></div>
         <figcaption>Left: daily profile 36–87%, slow level 10–47%, anomaly 3–33% of the variance. Right: the anomaly part decorrelates (below 0.1) within 2.6–4.1 hours.</figcaption>
       </figure>
       <div class="prose">
@@ -175,7 +178,7 @@
 
       <h3 class="subtitle mono">Three variables, no low-dimensional structure</h3>
       <figure>
-        <div class="fig-frame" style="max-width: 720px;"><img src="img/figE5_pca_structure.png" alt="Grouped bars per compartment of the variance carried by each of the three principal components: about 48 to 57 percent, 24 to 37 percent and 7 to 21 percent." loading="lazy" width="1049" height="516"></div>
+        <div class="fig-frame" style="max-width: 720px;"><a class="fig-zoom" href="img/figE5_pca_structure.png"><img src="img/figE5_pca_structure.png" alt="Grouped bars per compartment of the variance carried by each of the three principal components: about 48 to 57 percent, 24 to 37 percent and 7 to 21 percent." loading="lazy" width="1049" height="516"></a></div>
         <figcaption>Each principal component carries real variance (PC1 48–57%, PC3 still 7–21%); the correlation matrix is well conditioned.</figcaption>
       </figure>
       <div class="prose">
@@ -184,7 +187,7 @@
 
       <h3 class="subtitle mono">Each team has its own "normal"</h3>
       <figure>
-        <div class="fig-frame" style="max-width: 600px;"><img src="img/figE6_strategy_specific.png" alt="Six-by-six heatmap of false-alarm rates when a Mahalanobis model fitted on one compartment is used on another: 0.3 to 1.1 percent on the diagonal, from 0 to 30 percent off it." loading="lazy" width="921" height="740"></div>
+        <div class="fig-frame" style="max-width: 600px;"><a class="fig-zoom" href="img/figE6_strategy_specific.png"><img src="img/figE6_strategy_specific.png" alt="Six-by-six heatmap of false-alarm rates when a Mahalanobis model fitted on one compartment is used on another: 0.3 to 1.1 percent on the diagonal, from 0 to 30 percent off it." loading="lazy" width="921" height="740"></a></div>
         <figcaption>A Mahalanobis model fitted on one compartment (rows) and used on another (columns): 0.3–1.1% on its own compartment, 0–30% elsewhere — flooded with alarms or blind.</figcaption>
       </figure>
       <div class="prose">
@@ -222,11 +225,11 @@
         </ul>
       </div>
       <figure>
-        <div class="fig-frame"><img src="img/fig03_split_timeline.png" alt="Timeline from December to June with three rows: the blocked split alternating train, validation and test weeks; the chronological split; and the walk-forward refits scored from mid-January." loading="lazy" width="1497" height="506"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig03_split_timeline.png"><img src="img/fig03_split_timeline.png" alt="Timeline from December to June with three rows: the blocked split alternating train, validation and test weeks; the chronological split; and the walk-forward refits scored from mid-January." loading="lazy" width="1497" height="506"></a></div>
         <figcaption>The blocked split of the main protocol, the chronological split, and the past-only weekly refits of the deployment check.</figcaption>
       </figure>
       <figure>
-        <div class="fig-frame"><img src="img/fig04_injection_types.png" alt="Five small panels, one injected event each: a spike, a correlation break replacing three hours of humidity, a stuck sensor, a slow drift, and a night segment with the opposite lamp state." loading="lazy" width="1966" height="438"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig04_injection_types.png"><img src="img/fig04_injection_types.png" alt="Five small panels, one injected event each: a spike, a correlation break replacing three hours of humidity, a stuck sensor, a slow drift, and a night segment with the opposite lamp state." loading="lazy" width="1966" height="438"></a></div>
         <figcaption>One injected event of each type (blue) over the clean series (grey). The correlation break (I2) is the hidden anomaly: its values come from real data of the same variable, so they usually stay inside the band.</figcaption>
       </figure>
     </section>
@@ -234,7 +237,7 @@
     <section id="method" class="section container">
       <h2 class="section-title mono"><span class="accent">06.</span> Methods, each answering a finding</h2>
       <figure>
-        <div class="fig-frame"><img src="img/fig05_method_ladder.png" alt="Eight boxes in a row, from univariate bands and the Mahalanobis distance through robust MCD, PCA-MSPC, regime-conditional, residual-based and control-chart methods to black-box benchmarks, each labelled with the assumption it relaxes." loading="lazy" width="1425" height="393"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig05_method_ladder.png"><img src="img/fig05_method_ladder.png" alt="Eight boxes in a row, from univariate bands and the Mahalanobis distance through robust MCD, PCA-MSPC, regime-conditional, residual-based and control-chart methods to black-box benchmarks, each labelled with the assumption it relaxes." loading="lazy" width="1425" height="393"></a></div>
       </figure>
       <div class="table-wrap">
         <table class="wrap">
@@ -261,15 +264,15 @@
     <section id="outcome" class="section container">
       <h2 class="section-title mono"><span class="accent">07.</span> Results: did the data's predictions hold?</h2>
       <figure>
-        <div class="fig-frame"><img src="img/fig06_calibration.png" alt="Dot-and-interval chart of the false-alarm rate of 15 detectors against the nominal 1 percent line; 13 intervals reach 1 percent, the robust MCD and per-regime Gaussian lie above it." loading="lazy" width="1153" height="742"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig06_calibration.png"><img src="img/fig06_calibration.png" alt="Dot-and-interval chart of the false-alarm rate of 15 detectors against the nominal 1 percent line; 13 intervals reach 1 percent, the robust MCD and per-regime Gaussian lie above it." loading="lazy" width="1153" height="742"></a></div>
         <figcaption>Calibration: 13 of 15 detectors are calibrated. As the regime finding predicted, regime labels alone break it (1.91%); the robust estimator does too (2.51%) — a surprise, below.</figcaption>
       </figure>
       <figure>
-        <div class="fig-frame"><img src="img/fig07_detection_heatmap.png" alt="Heatmap of detection excess for 15 detectors and six anomaly categories; boxed cells mark the top group. MEWMA lambda 0.2 is boxed in five of six columns." loading="lazy" width="1325" height="929"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig07_detection_heatmap.png"><img src="img/fig07_detection_heatmap.png" alt="Heatmap of detection excess for 15 detectors and six anomaly categories; boxed cells mark the top group. MEWMA lambda 0.2 is boxed in five of six columns." loading="lazy" width="1325" height="929"></a></div>
         <figcaption>Detection beyond chance by anomaly type; boxed = top group (95% interval overlaps the best). Detectors specialise: the one-step innovation catches spikes, the static residual catches states, the slow chart catches drifts — the context-residual MEWMA (λ = 0.2) covers five of six.</figcaption>
       </figure>
       <figure>
-        <div class="fig-frame"><img src="img/fig08_real_fault_explained.png" alt="Three panels: the logged air temperature dropping to minus one degree, the detector score crossing its threshold at the drop, and contribution bars dominated by air temperature." loading="lazy" width="1837" height="492"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig08_real_fault_explained.png"><img src="img/fig08_real_fault_explained.png" alt="Three panels: the logged air temperature dropping to minus one degree, the detector score crossing its threshold at the drop, and contribution bars dominated by air temperature." loading="lazy" width="1837" height="492"></a></div>
         <figcaption>A real sensor fault, explained: the temperature reading drops to −1 °C on 30 January 2020; the detector alarms within minutes and attributes the alarm to air temperature.</figcaption>
       </figure>
       <div class="prose">
@@ -299,7 +302,7 @@
         <p>The drift finding left a debt: the blocked split fits each model on weeks that <em>surround</em> its test weeks, while a deployed detector can only learn from the past. Four checks, each with its hypothesis and decision rule written before it ran, measure the distance.</p>
       </div>
       <figure>
-        <div class="fig-frame"><img src="img/fig11_deployment_calibration.png" alt="Dot-and-interval chart on a log scale for six detectors under four settings. Never refitted: 7 to 41 percent. Weekly refit with training-tail threshold: 1.2 to 6.2 percent. Weekly refit with out-of-sample threshold: 0.5 to 1.7 percent, close to the blocked split." loading="lazy" width="1244" height="748"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig11_deployment_calibration.png"><img src="img/fig11_deployment_calibration.png" alt="Dot-and-interval chart on a log scale for six detectors under four settings. Never refitted: 7 to 41 percent. Weekly refit with training-tail threshold: 1.2 to 6.2 percent. Weekly refit with out-of-sample threshold: 0.5 to 1.7 percent, close to the blocked split." loading="lazy" width="1244" height="748"></a></div>
         <figcaption>False-alarm rate at a nominal 1% under four ways of fitting and thresholding (log scale).</figcaption>
       </figure>
       <div class="table-wrap">
@@ -314,14 +317,14 @@
         </table>
       </div>
       <figure>
-        <div class="fig-frame"><img src="img/fig10_transfer.png" alt="Two six-by-six heatmaps of false-alarm rates when a model fitted on one compartment is used on another: the Mahalanobis model mostly stays below 5 percent off the diagonal (median 2.5), the MEWMA model mostly lies between 20 and 95 percent." loading="lazy" width="1404" height="640"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig10_transfer.png"><img src="img/fig10_transfer.png" alt="Two six-by-six heatmaps of false-alarm rates when a model fitted on one compartment is used on another: the Mahalanobis model mostly stays below 5 percent off the diagonal (median 2.5), the MEWMA model mostly lies between 20 and 95 percent." loading="lazy" width="1404" height="640"></a></div>
         <figcaption>Borrowed from another compartment, the global model (left) is the one from the exploratory analysis; the recommended detector (right) transfers far worse — the models that explain a team's strategy best are the most specific to it.</figcaption>
       </figure>
       <div class="prose">
         <p><strong>Why weekly refitting is not enough.</strong> The threshold is read from the residual tail of the very rows the model was just fitted on, and residuals one week ahead are wider: in four compartments, next week's 1% level lies beyond the largest score of the training window. The fix follows from the mechanism — take each week's threshold from the previous four weeks' <em>out-of-sample</em> scores.</p>
       </div>
       <figure>
-        <div class="fig-frame"><img src="img/fig12_weekly_deployment.png" alt="Weekly false-alarm rate over the season on a log scale: never refitted climbs to 60 percent in May; weekly refit with training-tail threshold mostly stays between 1 and 15 percent; with out-of-sample threshold it stays mostly below 2 percent, rising to 5 percent in mid-May." loading="lazy" width="1374" height="580"></div>
+        <div class="fig-frame"><a class="fig-zoom" href="img/fig12_weekly_deployment.png"><img src="img/fig12_weekly_deployment.png" alt="Weekly false-alarm rate over the season on a log scale: never refitted climbs to 60 percent in May; weekly refit with training-tail threshold mostly stays between 1 and 15 percent; with out-of-sample threshold it stays mostly below 2 percent, rising to 5 percent in mid-May." loading="lazy" width="1374" height="580"></a></div>
         <figcaption>The recommended detector week by week (median over compartments). The remaining excess sits in the weeks when growers changed strategy (early March, May) — the drift finding again.</figcaption>
       </figure>
       <div class="callout"><p><strong>Headline.</strong> Refitted every week on the last four weeks and alarmed against a threshold from past out-of-sample scores, the context-residual MEWMA is near nominal on the test weeks (1.7% at 1%) and keeps its breadth. It still alarms 2.7% over the season (about three notifications a week), and one abnormal week can inflate its threshold a hundred-fold — enough, in one compartment, to hide the four real faults that followed. The context regression is the robust alternative (0.6%, all four faults caught).</p></div>
